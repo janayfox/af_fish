@@ -11,7 +11,7 @@
 
 module load nixpkgs/16.09
 module load gcc/7.3.0
-module laod intel/2018.3
+module load intel/2018.3
 module load bowtie2/2.3.4.3
 
 bowtie2 --nofw --quiet --very-sensitive-local --phred33  -x $1 -1 $2 -2 $3 --threads 12 --met-file ${4}_bowtie2_metrics.txt --al-conc-gz blacklist_paired_aligned_${4}.fq.gz --un-conc-gz blacklist_paired_unaligned_${4}.fq.gz  --al-gz blacklist_unpaired_aligned_${4}.fq.gz --un-gz blacklist_unpaired_unaligned_${4}.fq.gz
