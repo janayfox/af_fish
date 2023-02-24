@@ -8,6 +8,7 @@
 
 module load StdEnv/2020 
 module load gcc/9.3.0
+module load blast+/2.13.0
 module load singularity/3.8
 
 #build a blastable database 
