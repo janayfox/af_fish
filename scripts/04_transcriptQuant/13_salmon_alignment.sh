@@ -10,7 +10,6 @@ module load singularity/3.8
 module load nixpkgs/16.09
 module load gcc/9.3.0
 module load intel/2020.1.217
-module load bowtie2/2.3.4.3
 module load openmpi/4.0.3
 module load StdEnv/2020
 module load salmon/1.4.0
