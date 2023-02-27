@@ -14,3 +14,4 @@ module load hmmer/3.3.2
 
 busco -i ./BA.Trinity.fasta -l ./vertebrata_odb10 -o cleaned_busco_BA -c 4 -m transcriptome --offline
 
+busco -i ./BN.Trinity.fasta -l ./vertebrata_odb10 -o cleaned_busco_BA -c 4 -m transcriptome --offline

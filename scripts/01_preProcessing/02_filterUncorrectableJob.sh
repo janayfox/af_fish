@@ -9,4 +9,4 @@
 # $3 = sample ID 
  
 module load python
-python filterUncorrectable.py -1 $1 -2 $2 -s $3
+python 02a_filterUncorrectable.py -1 $1 -2 $2 -s $3

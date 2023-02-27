@@ -15,10 +15,17 @@ module load singularity/3.8
 makeblastdb -in uniprot_sprot.fasta -dbtype prot
 
 #perform blast search, reporting only the top alignment:
-blastx -query BA.Trinity.fasta -db uniprot_sprot.fasta -out blastx.outfmt6 \
+blastx -query BA.Trinity.fasta -db uniprot_sprot.fasta -out BA.blastx.outfmt6 \
+-evalue 1e-20 -num_threads 6 -max_target_seqs 1 -outfmt 6
+
+blastx -query BN.Trinity.fasta -db uniprot_sprot.fasta -out BN.blastx.outfmt6 \
 -evalue 1e-20 -num_threads 6 -max_target_seqs 1 -outfmt 6
 
 #examine the percentage of the target being aligned to the best matching Trinity transcript
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/analyze_blastPlus_topHit_coverage.pl \
-blastx.outfmt6 /data/BA.Trinity.fasta /data/uniprot_sprot.fasta
+BA.blastx.outfmt6 /data/BA.Trinity.fasta /data/uniprot_sprot.fasta
+
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/analyze_blastPlus_topHit_coverage.pl \
+BN.blastx.outfmt6 /data/BN.Trinity.fasta /data/uniprot_sprot.fasta

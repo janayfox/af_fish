@@ -10,4 +10,4 @@
 # $4 = fastqc file R2
  
 module load python
-python removeFastqcOverrep.py -1 $1 -2 $2 -fql $3 -fqr $4
+python 06a_removeFastqcOverrep.py -1 $1 -2 $2 -fql $3 -fqr $4

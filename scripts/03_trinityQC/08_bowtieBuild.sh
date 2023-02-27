@@ -17,11 +17,15 @@ module load bowtie2/2.3.4.3
 #module load StdEnv/2020
 #module load samtools/1.16.1
 
-#build index
+#build index BN
 bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
 
+#build index BA
+bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
+
+
 #run alignment 
-bowtie2 -p 10 -q --no-unal -k 20 -x BA.Trinity.fasta -1 $1 -2 $2 2>>align_stats.txt
+bowtie2 -p 10 -q --no-unal -k 20 -x BA.Trinity.fasta -1 $1 -2 $2 2>align_stats.txt
 #samtools view -@10 -Sb -o ${3}_bowtie2.bam
 
 #for BA

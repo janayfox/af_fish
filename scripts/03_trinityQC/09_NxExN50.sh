@@ -8,5 +8,10 @@
 
 module load singularity/3.8
 
+#for BA
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/TrinityStats.pl /data/BA.Trinity.fasta
+
+#for BN
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/TrinityStats.pl /data/BN.Trinity.fasta
