@@ -18,14 +18,14 @@ module load bowtie2/2.3.4.3
 #module load samtools/1.16.1
 
 #build index BN
-bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
+#bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
 
 #build index BA
-bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
-
+#bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
 
 #run alignment 
-bowtie2 -p 10 -q --no-unal -k 20 -x BA.Trinity.fasta -1 $1 -2 $2 2>align_stats.txt
+bowtie2 -p 10 -q --no-unal -k 20 -x BA.Trinity.fasta -1 $1 -2 $2 
+#2>align_stats.txt
 #samtools view -@10 -Sb -o ${3}_bowtie2.bam
 
 #for BA
@@ -67,26 +67,28 @@ sbatch 07_bowtieBuild.sh \
 0641g_right.fq,0642g_right.fq,\
 0643g_right.fq,0648g_right.fq,\
 0650g_right.fq,0651g_right.fq,\
-0655g_right.fq \
-0590g,0591g,\
-0592g,0593g,\
-0594g,0595g,\
-0596g,0597g,\
-0599g,0600g,\
-0601g,0602g,\
-0603g,0604g,\
-0605g,0606g,\
-0607g,0608g,\
-0609g,0625g,\
-0629g,0631g,\
-0632g,0633g,\
-0634g,0635g,\
-0636g,0638g,\
-0639g,0640g,\
-0641g,0642g,\
-0643g,0648g,\
-0650g,0651g,\
-0655g
+0655g_right.fq 
+
+# \
+# 0590g,0591g,\
+# 0592g,0593g,\
+# 0594g,0595g,\
+# 0596g,0597g,\
+# 0599g,0600g,\
+# 0601g,0602g,\
+# 0603g,0604g,\
+# 0605g,0606g,\
+# 0607g,0608g,\
+# 0609g,0625g,\
+# 0629g,0631g,\
+# 0632g,0633g,\
+# 0634g,0635g,\
+# 0636g,0638g,\
+# 0639g,0640g,\
+# 0641g,0642g,\
+# 0643g,0648g,\
+# 0650g,0651g,\
+# 0655g
 
 # for BN 
 sbatch 07_bowtieBuild.sh \
@@ -123,21 +125,23 @@ sbatch 07_bowtieBuild.sh \
 0637g_right.fq,0644g_right.fq,\
 0645g_right.fq,0646g_right.fq,\
 0647g_right.fq,0649g_right.fq,\
-0653g_right.fq \
-0580g,0582g,\
-0583g,0584g,\
-0585g,0586g,\
-0587g,0588g,\
-0589g,0610g,\
-0611g,0612g,\
-0613g,0614g,\
-0615g,0616g,\
-0617g,0619g,\
-0620g,0622g,\
-0623g,0624g,\
-0626g,0627g,\
-0628g,0630g,\
-0637g,0644g,\
-0645g,0646g,\
-0647g,0649g,\
-0653g 
+0653g_right.fq 
+
+# \
+# 0580g,0582g,\
+# 0583g,0584g,\
+# 0585g,0586g,\
+# 0587g,0588g,\
+# 0589g,0610g,\
+# 0611g,0612g,\
+# 0613g,0614g,\
+# 0615g,0616g,\
+# 0617g,0619g,\
+# 0620g,0622g,\
+# 0623g,0624g,\
+# 0626g,0627g,\
+# 0628g,0630g,\
+# 0637g,0644g,\
+# 0645g,0646g,\
+# 0647g,0649g,\
+# 0653g 
