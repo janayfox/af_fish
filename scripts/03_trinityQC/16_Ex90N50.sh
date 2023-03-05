@@ -89,34 +89,34 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript
 
 ## estimate TPM thresholds for transcript counting and filtering ## 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BA/matrix_kallisto_BA/BA_cl_kal.isoform.TMM.EXPR.matrix.E-inputs
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BN/matrix_kallisto_BN/BN_cl_kal.isoform.TMM.EXPR.matrix.E-inputs
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/salmon_output/BA/matrix_salmon_BA/BA_cl_sal.TMM.EXPR.matrix.E-inputs
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/salon_output/BN/matrix_salmon_BN/BN_cl_sal.isoform.TMM.EXPR.matrix.E-inputs
 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BA/matrix_kallisto_BA_bf/BA_bf_kal.isoform.TMM.EXPR.matrix.E-inputs
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BN/matrix_kallisto_BN_bf/BN_bf_kal.isoform.TMM.EXPR.matrix.E-inputs
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/salmon_output/BA/matrix_salmon_BA_bf/BA_bf_sal.TMM.EXPR.matrix.E-inputs
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
 --E_inputs /data/quant_output/quant_output_cleanedReads/salon_output/BN/matrix_salmon_BN_bf/BN_bf_sal.isoform.TMM.EXPR.matrix.E-inputs
