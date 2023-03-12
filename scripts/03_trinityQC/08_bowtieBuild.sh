@@ -14,8 +14,6 @@ module load nixpkgs/16.09
 module load gcc/7.3.0
 module load intel/2018.3
 module load bowtie2/2.3.4.3
-#module load StdEnv/2020
-#module load samtools/1.16.1
 
 #build index BN
 #bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
@@ -24,9 +22,7 @@ module load bowtie2/2.3.4.3
 #bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
 
 #run alignment 
-bowtie2 -p 10 -q --no-unal -k 20 -x BA.Trinity.fasta -1 $1 -2 $2 
-#2>align_stats.txt
-#samtools view -@10 -Sb -o ${3}_bowtie2.bam
+bowtie2 -p 10 -q --no-unal -k 20 -x BA.Trinity.fasta -1 $1 -2 $2 2>align_stats.txt
 
 #for BA
 sbatch 07_bowtieBuild.sh \

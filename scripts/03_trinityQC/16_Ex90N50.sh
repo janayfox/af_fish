@@ -11,7 +11,7 @@
 module load singularity/3.8
 
 ## Get Ex90N50 and Ex90 ##
-# cleaned reads
+cleaned reads
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/contig_ExN50_statistic.pl \
 /data/quant_output/quant_output_cleanedReads/kallisto_output/BA/matrix_kallisto_BA/BA_cl_kal.isoform.TMM.EXPR.matrix \
@@ -32,7 +32,7 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/contig_ExN50_statistic.pl \
 /data/quant_output/quant_output_cleanedReads/salmon_output/BN/matrix_salmon_BN/BN_cl_sal.isoform.TMM.EXPR.matrix \
 /data/cleanedReads/BN/BN.Trinity.fasta transcript | tee BN_cl_salmon.ExN50.transcripts.stats
 
-#pre-cleaning reads mapped to assembly made from cleaned reads 
+## pre-cleaning reads mapped to assembly made from cleaned reads 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/contig_ExN50_statistic.pl \
 /data/quant_output/quant_output_bfRemOvrRep/kallisto_output/BA/matrix_kallisto_BA_bf/BA_bf_kal.isoform.TMM.EXPR.matrix \
@@ -56,67 +56,66 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/contig_ExN50_statistic.pl \
 ## plot results ## 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/BA_cl_kallisto.ExN50.trancripts.stats
+/data/BA_cl_kallisto.ExN50.transcripts.stats
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/quality_assess/BN_cl_kallisto.ExN50.trancripts.stats
+/data/BN_cl_kallisto.ExN50.transcripts.stats
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/quality_assess/BA_cl_salmon.ExN50.trancripts.stats
+/data/BA_cl_salmon.ExN50.transcripts.stats
 
-singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data\
+singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/BN_cl_salmon.ExN50.trancripts.stats
+/data/BN_cl_salmon.ExN50.transcripts.stats
 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/BA_bf_kallisto.ExN50.trancripts.stats
-
-singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data\
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/BN_bf_kallisto.ExN50.trancripts.stats
+/data/BA_bf_kallisto.ExN50.transcripts.stats
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/BA_bf_salmon.ExN50.trancripts.stats
+/data/BN_bf_kallisto.ExN50.transcripts.stats
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
-/data/BN_bf_salmon.ExN50.trancripts.stats
+/data/BA_bf_salmon.ExN50.transcripts.stats
+
+singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
+/data/BN_bf_salmon.ExN50.transcripts.stats
 
 ## estimate TPM thresholds for transcript counting and filtering ## 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BA/matrix_kallisto_BA/BA_cl_kal.isoform.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BA/matrix_kallisto_BA/BA_cl_kal.isoform.TMM.EXPR.matrix.E-inputs 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BN/matrix_kallisto_BN/BN_cl_kal.isoform.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BN/matrix_kallisto_BN/BN_cl_kal.isoform.TMM.EXPR.matrix.E-inputs 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/salmon_output/BA/matrix_salmon_BA/BA_cl_sal.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_cleanedReads/salmon_output/BA/matrix_salmon_BA/BA_cl_sal.isoform.TMM.EXPR.matrix.E-inputs 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/salon_output/BN/matrix_salmon_BN/BN_cl_sal.isoform.TMM.EXPR.matrix.E-inputs
-
-
-singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BA/matrix_kallisto_BA_bf/BA_bf_kal.isoform.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_cleanedReads/salmon_output/BN/matrix_salmon_BN/BN_cl_sal.isoform.TMM.EXPR.matrix.E-inputs 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/kallisto_output/BN/matrix_kallisto_BN_bf/BN_bf_kal.isoform.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_bfRemOvrRep/kallisto_output/BA/matrix_kallisto_BA_bf/BA_bf_kal.isoform.TMM.EXPR.matrix.E-inputs 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/salmon_output/BA/matrix_salmon_BA_bf/BA_bf_sal.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_bfRemOvrRep/kallisto_output/BN/matrix_kallisto_BN_bf/BN_bf_kal.isoform.TMM.EXPR.matrix.E-inputs 
 
 singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
 trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
---E_inputs /data/quant_output/quant_output_cleanedReads/salon_output/BN/matrix_salmon_BN_bf/BN_bf_sal.isoform.TMM.EXPR.matrix.E-inputs
+--E_inputs /data/quant_output/quant_output_bfRemOvrRep/salmon_output/BA/matrix_salmon_BA_bf/BA_bf_sal.isoform.TMM.EXPR.matrix.E-inputs 
+
+singularity exec -e --env-file envfile -B /home/janayfox/scratch/afFishRNA:/data \
+trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/try_estimate_TPM_filtering_threshold.Rscript \
+--E_inputs /data/quant_output/quant_output_bfRemOvrRep/salmon_output/BN/matrix_salmon_BN_bf/BN_bf_sal.isoform.TMM.EXPR.matrix.E-inputs 

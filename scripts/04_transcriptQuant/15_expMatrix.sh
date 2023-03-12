@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --cpus-per-task=4
-#SBATCH --mem-per-cpu=45G
-#SBATCH --time=2-00:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem-per-cpu=20G
+#SBATCH --time=1-00:00
 #SBATCH --account=def-barrett
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=janay.fox@mail.mcgill.ca

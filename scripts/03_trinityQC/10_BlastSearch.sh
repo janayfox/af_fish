@@ -15,17 +15,34 @@ module load singularity/3.8
 makeblastdb -in uniprot_sprot.fasta -dbtype prot
 
 #perform blast search, reporting only the top alignment:
-blastx -query BA.Trinity.fasta -db uniprot_sprot.fasta -out BA.blastx.outfmt6 \
+blastx -query BA.Trinity.fasta -db /uniprot/uniprot_sprot.fasta -out BA.blastx.outfmt6 \
 -evalue 1e-20 -num_threads 6 -max_target_seqs 1 -outfmt 6
 
-blastx -query BN.Trinity.fasta -db uniprot_sprot.fasta -out BN.blastx.outfmt6 \
+blastx -query BN.Trinity.fasta -db /uniprot/uniprot_sprot.fasta -out BN.blastx.outfmt6 \
 -evalue 1e-20 -num_threads 6 -max_target_seqs 1 -outfmt 6
 
 #examine the percentage of the target being aligned to the best matching Trinity transcript
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/analyze_blastPlus_topHit_coverage.pl \
-BA.blastx.outfmt6 /data/BA.Trinity.fasta /data/uniprot_sprot.fasta
+/data/BA.blastx.outfmt6 /data/BA.Trinity.fasta /data/uniprot/uniprot_sprot.fasta
 
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/analyze_blastPlus_topHit_coverage.pl \
-BN.blastx.outfmt6 /data/BN.Trinity.fasta /data/uniprot_sprot.fasta
+/data/BN.blastx.outfmt6 /data/BN.Trinity.fasta /data/uniprot/uniprot_sprot.fasta
+
+#group transcripts to improve sequence coverage
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/blast_outfmt6_group_segments.pl \
+/data/BA.blastx.outfmt6 /data/BA.Trinity.fasta /data/uniprot/uniprot_sprot.fasta > blastx.outfmt6.grouped
+
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/blast_outfmt6_group_segments.tophit_coverage.pl \
+/data/blastx.outfmt6.grouped
+
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/blast_outfmt6_group_segments.pl \
+/data/BN.blastx.outfmt6 /data/BN.Trinity.fasta /data/uniprot/uniprot_sprot.fasta > blastx.outfmt6.grouped
+
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/util/misc/blast_outfmt6_group_segments.tophit_coverage.pl \
+/data/blastx.outfmt6.grouped
