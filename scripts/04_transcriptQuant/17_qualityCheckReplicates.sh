@@ -35,14 +35,25 @@ module load singularity/3.8
 # --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/quant_output_bfRemOvrRep/salmon_output/BN/matrix_salmon_BN_bf/BN_bf_sal.isoform.counts.matrix \
 # --samples /lustre04/scratch/janayfox/afFishRNA/samples_BN.txt --log2 --CPM --min_rowSums 10 --compare_replicates
 
+# new BN 
+singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR \
+--matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/kallisto/matrix/BN_bf_new_kal.isoform.counts.matrix \
+--samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_kal_bf.txt --log2 --CPM --min_rowSums 10 --compare_replicates
+
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
+# --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon/matrix/BN_bf_new_sal.isoform.counts.matrix \
+# --samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal_bf.txt --log2 --CPM --min_rowSums 10 --compare_replicates
+
 #compare across all samples 
 #correlation matrix
 ## reads before removal of overrep ##
 #kallisto 
-singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
---matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/quant_output_bfRemOvrRep/kallisto_output/BA/matrix_kallisto_BA_bf/BA_bf_kal.isoform.counts.matrix \
---samples /lustre04/scratch/janayfox/afFishRNA/samples_BA_kal.txt --log2 --CPM --min_rowSums 10 --sample_cor_matrix
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
+# --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/quant_output_bfRemOvrRep/kallisto_output/BA/matrix_kallisto_BA_bf/BA_bf_kal.isoform.counts.matrix \
+# --samples /lustre04/scratch/janayfox/afFishRNA/samples_BA_kal.txt --log2 --CPM --min_rowSums 10 --sample_cor_matrix
 
 # singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
 # trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
@@ -59,6 +70,17 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
 # trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
 # --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/quant_output_bfRemOvrRep/salmon_output/BN/matrix_salmon_BN_bf/BN_bf_sal.isoform.counts.matrix \
 # --samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal.txt --log2 --CPM --min_rowSums 10 --sample_cor_matrix
+
+#new BN
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR \
+# --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/kallisto/matrix/BN_bf_new_kal.isoform.counts.matrix \
+# --samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_kal_bf.txt --log2 --CPM --min_rowSums 10 --sample_cor_matrix
+
+singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
+--matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon/matrix/BN_bf_new_sal.isoform.counts.matrix \
+--samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal_bf.txt --log2 --CPM --min_rowSums 10 --sample_cor_matrix
 
 # #PCA
 # ## reads before removal of overrep ##
@@ -84,3 +106,12 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
 # --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/quant_output_bfRemOvrRep/salmon_output/BN/matrix_salmon_BN_bf/BN_bf_sal.isoform.counts.matrix \
 # --samples /lustre04/scratch/janayfox/afFishRNA/samples_BN.txt --log2 --CPM --min_rowSums 10 --center_rows --prin_comp 3
 
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR \
+# --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/kallisto/matrix/BN_bf_new_kal.isoform.counts.matrix \
+# --samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_kal_bf.txt --log2 --CPM --min_rowSums 10 --center_rows --prin_comp 3
+
+singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR \
+--matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon/matrix/BN_bf_new_sal.isoform.counts.matrix \
+--samples /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal_bf.txt --log2 --CPM --min_rowSums 10 --center_rows --prin_comp 3
