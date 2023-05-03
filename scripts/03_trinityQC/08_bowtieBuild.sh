@@ -8,7 +8,6 @@
 
 #$1 = left handed reads
 #$2 = right haded reads
-#$3 = sample name
 
 module load nixpkgs/16.09
 module load gcc/7.3.0
@@ -16,55 +15,58 @@ module load intel/2018.3
 module load bowtie2/2.3.4.3
 
 #build index BA
-#bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
+bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
+bowtie2-build ./BA_bf.Trinity.fasta BA_bf.Trinity.fasta
 
 #build index BN
-#bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
+bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
 bowtie2-build ./BN_bf.Trinity.fasta BN_bf.Trinity.fasta
 
 #run alignment 
 bowtie2 -p 10 -q --no-unal -k 20 -x BN_bf.Trinity.fasta -1 $1 -2 $2 2>align_stats.txt
+bowtie2 -p 10 -q --no-unal -k 20 -x BA_bf.Trinity.fasta -1 $1 -2 $2 2>align_stats.txt
+
 
 # #for BA
-# sbatch 08_bowtieBuild.sh \
-# 0590g_left.fq,0591g_left.fq,\
-# 0592g_left.fq,0593g_left.fq,\
-# 0594g_left.fq,0595g_left.fq,\
-# 0596g_left.fq,0597g_left.fq,\
-# 0599g_left.fq,0600g_left.fq,\
-# 0601g_left.fq,0602g_left.fq,\
-# 0603g_left.fq,0604g_left.fq,\
-# 0605g_left.fq,0606g_left.fq,\
-# 0607g_left.fq,0608g_left.fq,\
-# 0609g_left.fq,0625g_left.fq,\
-# 0629g_left.fq,0631g_left.fq,\
-# 0632g_left.fq,0633g_left.fq,\
-# 0634g_left.fq,0635g_left.fq,\
-# 0636g_left.fq,0638g_left.fq,\
-# 0639g_left.fq,0640g_left.fq,\
-# 0641g_left.fq,0642g_left.fq,\
-# 0643g_left.fq,0648g_left.fq,\
-# 0650g_left.fq,0651g_left.fq,\
-# 0655g_left.fq \
-# 0590g_right.fq,0591g_right.fq,\
-# 0592g_right.fq,0593g_right.fq,\
-# 0594g_right.fq,0595g_right.fq,\
-# 0596g_right.fq,0597g_right.fq,\
-# 0599g_right.fq,0600g_right.fq,\
-# 0601g_right.fq,0602g_right.fq,\
-# 0603g_right.fq,0604g_right.fq,\
-# 0605g_right.fq,0606g_right.fq,\
-# 0607g_right.fq,0608g_right.fq,\
-# 0609g_right.fq,0625g_right.fq,\
-# 0629g_right.fq,0631g_right.fq,\
-# 0632g_right.fq,0633g_right.fq,\
-# 0634g_right.fq,0635g_right.fq,\
-# 0636g_right.fq,0638g_right.fq,\
-# 0639g_right.fq,0640g_right.fq,\
-# 0641g_right.fq,0642g_right.fq,\
-# 0643g_right.fq,0648g_right.fq,\
-# 0650g_right.fq,0651g_right.fq,\
-# 0655g_right.fq 
+sbatch 08_bowtieBuild.sh \
+0590g_left.fq,0591g_left.fq,\
+0592g_left.fq,0593g_left.fq,\
+0594g_left.fq,0595g_left.fq,\
+0596g_left.fq,0597g_left.fq,\
+0599g_left.fq,0600g_left.fq,\
+0601g_left.fq,0602g_left.fq,\
+0603g_left.fq,0604g_left.fq,\
+0605g_left.fq,0606g_left.fq,\
+0607g_left.fq,0608g_left.fq,\
+0609g_left.fq,0625g_left.fq,\
+0629g_left.fq,0631g_left.fq,\
+0632g_left.fq,0633g_left.fq,\
+0634g_left.fq,0635g_left.fq,\
+0636g_left.fq,0638g_left.fq,\
+0639g_left.fq,0640g_left.fq,\
+0641g_left.fq,0642g_left.fq,\
+0643g_left.fq,0648g_left.fq,\
+0650g_left.fq,0651g_left.fq,\
+0655g_left.fq \
+0590g_right.fq,0591g_right.fq,\
+0592g_right.fq,0593g_right.fq,\
+0594g_right.fq,0595g_right.fq,\
+0596g_right.fq,0597g_right.fq,\
+0599g_right.fq,0600g_right.fq,\
+0601g_right.fq,0602g_right.fq,\
+0603g_right.fq,0604g_right.fq,\
+0605g_right.fq,0606g_right.fq,\
+0607g_right.fq,0608g_right.fq,\
+0609g_right.fq,0625g_right.fq,\
+0629g_right.fq,0631g_right.fq,\
+0632g_right.fq,0633g_right.fq,\
+0634g_right.fq,0635g_right.fq,\
+0636g_right.fq,0638g_right.fq,\
+0639g_right.fq,0640g_right.fq,\
+0641g_right.fq,0642g_right.fq,\
+0643g_right.fq,0648g_right.fq,\
+0650g_right.fq,0651g_right.fq,\
+0655g_right.fq 
 
 # # for BN 
 sbatch 08_bowtieBuild.sh \

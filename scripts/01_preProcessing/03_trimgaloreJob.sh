@@ -4,6 +4,11 @@
 #SBATCH --time=0-10:00
 #SBATCH --account=def-barrett
 
+#######################################################
+### Goal: Trim reads using TrimGalore
+### Author: Janay Fox
+#######################################################
+
 # $1 = R1 file 
 # $2 = R2 file 
  

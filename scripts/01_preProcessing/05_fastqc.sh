@@ -4,6 +4,10 @@
 #SBATCH --time=1-00:00
 #SBATCH --account=def-barrett
 
+#######################################################
+### Goal: Run FastQC on all samples
+### Author: Janay Fox
+#######################################################
 
 module load nixpkgs/16.09
 module load StdEnv/2020

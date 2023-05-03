@@ -4,6 +4,11 @@
 #SBATCH --time=7-00:00
 #SBATCH --account=def-barrett
 
+#######################################################
+### Goal: Map reads to rRNA database 
+### Author: Janay Fox
+#######################################################
+
 # $1 = full path to rRNA database (do not include fasta suffix)
 # $2 = R1 file 
 # $3 = R2 file 

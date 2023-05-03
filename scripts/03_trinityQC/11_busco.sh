@@ -6,6 +6,11 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=janay.fox@mail.mcgill.ca
 
+#######################################################
+### Goal: Run BUSCO on both assemblies
+### Author: Janay Fox
+#######################################################
+
 module load StdEnv/2020
 module load gcc/9.3.0
 module load openmpi/4.0.3
@@ -16,4 +21,6 @@ module load hmmer/3.3.2
 
 # busco -i ./BN.Trinity.fasta -l ./vertebrata_odb10 -o cleaned_busco_BA -c 4 -m transcriptome --offline
 
-busco -i ./BN_bf.Trinity.fasta -l ../../vertebrata_odb10 -o cleaned_busco_BN_bf -c 4 -m transcriptome --offline
+#busco -i ./BN_bf.Trinity.fasta -l ../../vertebrata_odb10 -o cleaned_busco_BN_bf -c 4 -m transcriptome --offline
+
+busco -i ./BA_bf.Trinity.fasta -l ../../vertebrata_odb10 -o cleaned_busco_BA_bf -c 4 -m transcriptome --offline

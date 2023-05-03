@@ -4,6 +4,11 @@
 #SBATCH --time=5-00:00
 #SBATCH --account=def-barrett
 
+#######################################################
+### Goal: Run rcorrector on raw reads
+### Author: Janay Fox
+#######################################################
+
 # $1 = R1 file 
 # $2 = R2 file 
  

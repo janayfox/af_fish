@@ -10,7 +10,7 @@ module load singularity/3.8
 
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
 trinityrnaseq.v2.15.0.simg Trinity --seqType fq --CPU 4 --max_memory 45G --SS_lib_type RF \
---output /data/trinity_output \
+--output /data/trinity_output --full_cleanup \
 --left /data/0580g_left.fq,/data/0582g_left.fq,\
 /data/0583g_left.fq,/data/0584g_left.fq,\
 /data/0585g_left.fq,/data/0586g_left.fq,\

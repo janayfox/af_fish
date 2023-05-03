@@ -1,11 +1,16 @@
 #!/bin/bash
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=45G
-#SBATCH --time=7-00:00
+#SBATCH --time=2-00:00
 #SBATCH --account=def-barrett
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=janay.fox@mail.mcgill.ca
 #SBATCH --output=kallisto_bf_BN
+
+#######################################################
+### Goal: Use Kallisto to quantify transcripts
+### Author: Janay Fox
+#######################################################
 
 module load singularity/3.8
 module load nixpkgs/16.09
@@ -24,9 +29,14 @@ module load kallisto/0.46.1
 # --transcripts /data/BN.Trinity.fasta --est_method kallisto \
 # --trinity_mode --prep_reference
 
-singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BN:/data \
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BN:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/BN_bf.Trinity.fasta --est_method kallisto \
+# --trinity_mode --prep_reference
+
+singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/BN_bf.Trinity.fasta --est_method kallisto \
+--transcripts /data/BA_bf.Trinity.fasta --est_method kallisto \
 --trinity_mode --prep_reference
 
 #run alignment and abundance estimation on cleaned reads 
@@ -53,9 +63,14 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
 # --samples_file /data/readsBeforeRmoverrep/BN/samples_BN_kal_bf.txt \
 # --est_method kallisto --trinity_mode --output_dir kallisto_output
 
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA/:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
+# --samples_file /data/readsBeforeRmoverrep/BN/samples_BN_kal_bf.txt \
+# --est_method kallisto --trinity_mode --output_dir kallisto_output
+
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
---samples_file /data/readsBeforeRmoverrep/BN/samples_BN_kal_bf.txt \
+--transcripts /data/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
+--samples_file /data/readsBeforeRmoverrep/BN/samples_BA_kal_bf.txt \
 --est_method kallisto --trinity_mode --output_dir kallisto_output
-

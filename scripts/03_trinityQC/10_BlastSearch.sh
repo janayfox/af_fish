@@ -6,6 +6,11 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=janay.fox@mail.mcgill.ca
 
+#######################################################
+### Goal: Run BLAST search on both assemblies (didnt end up using)
+### Author: Janay Fox
+#######################################################
+
 module load StdEnv/2020 
 module load gcc/9.3.0
 module load blast+/2.13.0
