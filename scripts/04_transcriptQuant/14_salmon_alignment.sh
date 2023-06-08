@@ -33,10 +33,10 @@ module load salmon/1.4.0
 # --transcripts /data/BN_bf.Trinity.fasta --est_method salmon \
 # --trinity_mode --prep_reference
 
-singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/BA_bf.Trinity.fasta --est_method salmon \
---trinity_mode --prep_reference
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BA:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/BA_bf.Trinity.fasta --est_method salmon \
+# --trinity_mode --prep_reference
 
 # #run alignment and abundance estimation on cleaned reads
 # singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
@@ -50,26 +50,33 @@ trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
 # --est_method salmon --trinity_mode --output_dir salmon_output
 
 # #run alignment and abundance estimation on uncleaned reads
-singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/cleanedReads/BA/BA.Trinity.fasta --seqType fq --SS_lib_type RF \
---samples_file /data/readsBeforeRmoverrep/BA/samples_BA_sal_bf.txt \
---est_method salmon --trinity_mode --output_dir salmon_output
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/cleanedReads/BA/BA.Trinity.fasta --seqType fq --SS_lib_type RF \
+# --samples_file /data/readsBeforeRmoverrep/BA/samples_BA_sal_bf.txt \
+# --est_method salmon --trinity_mode --output_dir salmon_output
 
-singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/cleanedReads/BN/BN.Trinity.fasta --seqType fq --SS_lib_type RF \
---samples_file /data/readsBeforeRmoverrep/BN/samples_BN_sal_bf.txt \
---est_method salmon --trinity_mode --output_dir salmon_output
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/cleanedReads/BN/BN.Trinity.fasta --seqType fq --SS_lib_type RF \
+# --samples_file /data/readsBeforeRmoverrep/BN/samples_BN_sal_bf.txt \
+# --est_method salmon --trinity_mode --output_dir salmon_output
 
-singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
---samples_file /data/readsBeforeRmoverrep/BN/samples_BN_sal_bf.txt \
---est_method salmon --trinity_mode --output_dir salmon_output
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
+# --samples_file /data/readsBeforeRmoverrep/BN/samples_BN_sal_bf.txt \
+# --est_method salmon --trinity_mode --output_dir salmon_output
 
-singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
+# singularity exec -e -B /home/janayfox/scratch/afFishRNA:/data \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+# --transcripts /data/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
+# --samples_file /data/readsBeforeRmoverrep/BA/samples_BA_sal_bf.txt \
+# --est_method salmon --trinity_mode --output_dir salmon_output
+
+#rerun
+singularity exec -e -B /lustre04/scratch/janayfox/afFishRNA \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
---transcripts /data/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
---samples_file /data/readsBeforeRmoverrep/BA/samples_BA_sal_bf.txt \
+--transcripts /lustre04/scratch/janayfox/afFishRNA/trinity_output/bfRem_assembly/BN/BN_bf.Trinity.fasta --seqType fq --SS_lib_type RF \
+--samples_file /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal_bf.txt \
 --est_method salmon --trinity_mode --output_dir salmon_output

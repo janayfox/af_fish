@@ -60,8 +60,8 @@ module load singularity/3.8
 # re run with genes, min CPM, focussing on salmon
 singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/run_DE_analysis.pl \
---matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon/matrix/BN_bf_new_sal.gene.counts.matrix \
---method edgeR --samples_file /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal_bf.txt --output BN_salmon_DEG_gene_minCPM \
+--matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon_new/matrix/BN_bf_new_sal.gene.counts.matrix \
+--method edgeR --samples_file /lustre04/scratch/janayfox/afFishRNA/samples_BN_sal_bf.txt --output BN_salmon_DEG_gene_minCPM_new \
 --min_reps_min_cpm '7,1'
 
 singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \

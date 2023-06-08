@@ -73,27 +73,27 @@ module load singularity/3.8
 # --gene_trans_map /lustre04/scratch/janayfox/afFishRNA/cleanedReads/BN/BN.Trinity.fasta.gene_trans_map \
 # --quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/quant_output_bfRemOvrRep/salmon_output/BN/BN_bf_salquant_files.txt
 
-# For assembly based on reads before cleaning 
-singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
---est_method kallisto --name_sample_by_basedir --out_prefix BN_bf_new_kal \
---gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta.gene_trans_map \
---quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/kallisto/BN_bf_kalquant_files.txt
+# # For assembly based on reads before cleaning 
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
+# --est_method kallisto --name_sample_by_basedir --out_prefix BN_bf_new_kal \
+# --gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta.gene_trans_map \
+# --quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/kallisto/BN_bf_kalquant_files.txt
 
 singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
+/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
 --est_method salmon --name_sample_by_basedir --out_prefix BN_bf_new_sal \
---gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta.gene_trans_map \
---quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon/BN_bf_salquant_files.txt
+--gene_trans_map /lustre04/scratch/janayfox/afFishRNA/trinity_output/bfRem_assembly/BN/BN_bf.Trinity.fasta.gene_trans_map \
+--quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BN/salmon_new/BN_bf_salquant_files.txt
 
-singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
---est_method kallisto --name_sample_by_basedir --out_prefix BA_bf_new_kal \
---gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta.gene_trans_map \
---quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BA/kallisto/BA_bf_kalquant_files.txt
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
+# --est_method kallisto --name_sample_by_basedir --out_prefix BA_bf_new_kal \
+# --gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta.gene_trans_map \
+# --quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BA/kallisto/BA_bf_kalquant_files.txt
 
-singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
---est_method salmon --name_sample_by_basedir --out_prefix BA_bf_new_sal \
---gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta.gene_trans_map \
---quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BA/salmon/BA_bf_salquant_files.txt
+# singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# trinityrnaseq.v2.15.0.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
+# --est_method salmon --name_sample_by_basedir --out_prefix BA_bf_new_sal \
+# --gene_trans_map /lustre04/scratch/janayfox/afFishRNA/readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta.gene_trans_map \
+# --quant_files /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BA/salmon/BA_bf_salquant_files.txt
