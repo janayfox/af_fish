@@ -16,12 +16,11 @@ module load nixpkgs/16.09
 module load singularity/3.8
 
 #extract GO assignments 
-# singularity exec -e -B /lustre04/scratch/janayfox/afFishRNA trinotate.v4.0.0.simg \
-# /usr/local/src/Trinotate/util/extract_GO_assignments_from_Trinotate_xls.pl \
-# --Trinotate_xls /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_trinotate.xls \
-# -G --include_ancestral_terms > BN_go_annotations.txt
+singularity exec -e -B /lustre04/scratch/janayfox/afFishRNA trinotate.v4.0.0.simg \
+/usr/local/src/Trinotate/util/extract_GO_assignments_from_Trinotate_xls.pl \
+--Trinotate_xls /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_trinotate.xls \
+-G --include_ancestral_terms > BN_go_annotations.txt
 
-#still need to run this for BA
 singularity exec -e -B /lustre04/scratch/janayfox/afFishRNA trinotate.v4.0.0.simg \
 /usr/local/src/Trinotate/util/extract_GO_assignments_from_Trinotate_xls.pl \
 --Trinotate_xls /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_trinotate.xls \
@@ -56,9 +55,24 @@ singularity exec -e -B /lustre04/scratch/janayfox/afFishRNA trinotate.v4.0.0.sim
 # --GO_annots /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_go_annotations.txt \
 # --gene_lengths /lustre04/scratch/janayfox/afFishRNA/trinotate/BN.Trinity.gene_lengths.txt
 
+# singularity exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# /lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/analyze_diff_expr.pl \
+# --matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BA/salmon/matrix/BA_bf_new_sal.gene.TMM.EXPR.matrix \
+# -P 0.01 -C 2 --samples /lustre04/scratch/janayfox/afFishRNA/samples_BA_sal_bf.txt --examine_GO_enrichment \
+# --GO_annots /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
+# --gene_lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
+
+#run GOseq on gene lists
 singularity exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
-/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/analyze_diff_expr.pl \
---matrix /lustre04/scratch/janayfox/afFishRNA/quant_output/assemblyReadsBeforeRm/BA/salmon/matrix/BA_bf_new_sal.gene.TMM.EXPR.matrix \
--P 0.01 -C 2 --samples /lustre04/scratch/janayfox/afFishRNA/samples_BA_sal_bf.txt --examine_GO_enrichment \
---GO_annots /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
---gene_lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
+/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+--factor_labeling /lustre04/scratch/janayfox/afFishRNA/BN_GO_factor.txt \
+--background /lustre04/scratch/janayfox/afFishRNA/BN_background.txt \
+--GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_go_annotations.txt \
+--lengths /lustre04/scratch/janayfox/afFishRNA/trinotate/BN.Trinity.gene_lengths.txt
+
+singularity exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
+/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+--factor_labeling /lustre04/scratch/janayfox/afFishRNA/BA_GO_factor.txt \
+--background /lustre04/scratch/janayfox/afFishRNA/BA_background.txt \
+--GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
+--lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
