@@ -16,12 +16,10 @@ module load intel/2018.3
 module load bowtie2/2.3.4.3
 
 # #build index BA
-# bowtie2-build ./BA.Trinity.fasta BA.Trinity.fasta
-# bowtie2-build ./BA_bf.Trinity.fasta BA_bf.Trinity.fasta
+bowtie2-build ./BA_bf.Trinity.fasta BA_bf.Trinity.fasta
 
 # #build index BN
-# bowtie2-build ./BN.Trinity.fasta BN.Trinity.fasta
-# bowtie2-build ./BN_bf.Trinity.fasta BN_bf.Trinity.fasta
+bowtie2-build ./BN_bf.Trinity.fasta BN_bf.Trinity.fasta
 
 #run alignment 
 bowtie2 -p 10 -q --no-unal -k 20 -x /home/janayfox/scratch/afFishRNA/trinity_output/bfRem_assembly/BN/BN_bf.Trinity.fasta -1 $1 -2 $2 2>${3}align_stats.txt

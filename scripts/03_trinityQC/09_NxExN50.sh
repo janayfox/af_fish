@@ -14,15 +14,9 @@
 module load singularity/3.8
 
 #for BA
-singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BA:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/TrinityStats.pl /data/BA.Trinity.fasta
-
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BA:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/TrinityStats.pl /data/BA_bf.Trinity.fasta
 
-# #for BN
-singularity exec -e -B /home/janayfox/scratch/afFishRNA/cleanedReads/BN:/data \
-trinityrnaseq.v2.15.0.simg /usr/local/bin/util/TrinityStats.pl /data/BN.Trinity.fasta
-
+#for BN
 singularity exec -e -B /home/janayfox/scratch/afFishRNA/readsBeforeRmoverrep/BN:/data \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/util/TrinityStats.pl /data/BN_bf.Trinity.fasta

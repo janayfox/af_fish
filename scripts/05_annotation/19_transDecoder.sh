@@ -13,8 +13,8 @@
 
 #extract long ORFs
 ./TransDecoder-v5.7.0/TransDecoder.LongOrfs -t ./readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta
-#./TransDecoder-v5.7.0/TransDecoder.LongOrfs -t ./readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta
+./TransDecoder-v5.7.0/TransDecoder.LongOrfs -t ./readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta
 
 #predict coding regions
 ./TransDecoder-v5.7.0/TransDecoder.Predict -t ./readsBeforeRmoverrep/BN/BN_bf.Trinity.fasta
-#./TransDecoder-v5.7.0/TransDecoder.Predict -t ./readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta
+./TransDecoder-v5.7.0/TransDecoder.Predict -t ./readsBeforeRmoverrep/BA/BA_bf.Trinity.fasta
