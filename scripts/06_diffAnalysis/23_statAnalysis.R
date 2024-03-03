@@ -61,19 +61,17 @@ BA.pond.data[,1] <- NULL
 ##  Make UpSet plots and venn diagrams ## 
 #get dataframe in proper format 
 BN.StF.vs.StP.DEG.list <- data.frame(gene = rownames(BN.StF.vs.StP.DEG), comparison = "H-I vs H-A")
-BN.StF.vs.SwF.DEG.list <- data.frame(gene = rownames(BN.StF.vs.SwF.DEG), comparison = "H-I vs L-I")
 BN.StP.vs.SwP.DEG.list <- data.frame(gene = rownames(BN.StP.vs.SwP.DEG), comparison = "H-A vs L-A")
 BN.SwF.vs.SwP.DEG.list <- data.frame(gene = rownames(BN.SwF.vs.SwP.DEG), comparison = "L-I vs L-A")
 
-BN.DEG.upset <- rbind(BN.StF.vs.StP.DEG.list, BN.StF.vs.SwF.DEG.list, BN.StP.vs.SwP.DEG.list, BN.SwF.vs.SwP.DEG.list)
+BN.DEG.upset <- rbind(BN.StF.vs.StP.DEG.list, BN.StP.vs.SwP.DEG.list, BN.SwF.vs.SwP.DEG.list)
 BN.DEG.upset <- BN.DEG.upset %>% group_by(gene) %>% summarize(comparisons = list(comparison))
 
 BA.StF.vs.StP.DEG.list <- data.frame(gene = rownames(BA.StF.vs.StP.DEG), comparison = "H-I vs H-A")
-BA.StF.vs.SwF.DEG.list <- data.frame(gene = rownames(BA.StF.vs.SwF.DEG), comparison = "H-I vs L-I")
 BA.StP.vs.SwP.DEG.list <- data.frame(gene = rownames(BA.StP.vs.SwP.DEG), comparison = "H-A vs L-A")
 BA.SwF.vs.SwP.DEG.list <- data.frame(gene = rownames(BA.SwF.vs.SwP.DEG), comparison = "L-I vs L-A")
 
-BA.DEG.upset <- rbind(BA.StF.vs.StP.DEG.list, BA.StF.vs.SwF.DEG.list, BA.StP.vs.SwP.DEG.list, BA.SwF.vs.SwP.DEG.list)
+BA.DEG.upset <- rbind(BA.StF.vs.StP.DEG.list, BA.StP.vs.SwP.DEG.list, BA.SwF.vs.SwP.DEG.list)
 BA.DEG.upset <- BA.DEG.upset %>% group_by(gene) %>% summarize(comparisons = list(comparison))
 
 #Plot upset 
@@ -101,29 +99,12 @@ BA.upset <- ggplot(data = BA.DEG.upset, aes(x = comparisons)) + geom_bar(fill = 
 BA.upset
 dev.off()
 
-#Plot venn diagram 
-#function to display venn diagram 
-display_venn <- function(x, ...){
-  library(VennDiagram)
-  grid.newpage()
-  venn_object <- venn.diagram(x, filename = NULL, ...)
-  grid.draw(venn_object)
-}
-
-display_venn(BN.DEG.list.upset , lwd = 2, col = c("#e76f51", "#0081a7", "#FFBC42", "#a7c957"),
-             fill = c(alpha("#e76f51", 0.8), alpha("#0081a7", 0.8), alpha("#FFBC42",0.8), alpha("#a7c957",0.8)),
-             fontface = "bold", cex = 1.5, cat.cex = 1.5)
-
-display_venn(BA.DEG.list.upset, lwd = 2, col = c("#e76f51", "#0081a7", "#FFBC42", "#a7c957"),
-             fill = c(alpha("#e76f51", 0.8), alpha("#0081a7", 0.8), alpha("#FFBC42",0.8), alpha("#a7c957",0.8)),
-             fontface = "bold", cex = 1.5, cat.cex = 1.5)
-
 ## Run and Plot PCA on DEG##
 #make list of DEG from all four important comparisons 
-BN.DEG.list <- c(BN.StF.vs.StP.DEG.list$gene, BN.StF.vs.SwF.DEG.list$gene, BN.SwF.vs.SwP.DEG.list$gene, BN.StP.vs.SwP.DEG.list$gene)
+BN.DEG.list <- c(BN.StF.vs.StP.DEG.list$gene,BN.SwF.vs.SwP.DEG.list$gene, BN.StP.vs.SwP.DEG.list$gene)
 BN.DEG.list <- unique(BN.DEG.list) #remove duplicates
 
-BA.DEG.list <- c(BA.StF.vs.StP.DEG.list$gene, BA.StF.vs.SwF.DEG.list$gene, BA.SwF.vs.SwP.DEG.list$gene, BA.StP.vs.SwP.DEG.list$gene)
+BA.DEG.list <- c(BA.StF.vs.StP.DEG.list$gene, BA.SwF.vs.SwP.DEG.list$gene, BA.StP.vs.SwP.DEG.list$gene)
 BA.DEG.list <- unique(BA.DEG.list) #remove duplicates
 
 #extract DEG
@@ -225,8 +206,8 @@ plot.pca <- function(pca.data, pca.x, pca.y, xlabel, ylabel){
                        values = c(15, 17, 15, 17)) + 
     geom_hline(yintercept = 0, linetype = "dashed") + geom_vline(xintercept = 0, linetype = "dashed") + 
     stat_ellipse(aes(group = group)) + xlab(xlabel) + ylab(ylabel) +
-    theme(axis.title = element_text(size = 14), axis.text = element_text(size = 11), legend.text = element_text(size=12), 
-          legend.title = element_text(size = 13))
+    theme(axis.title = element_text(size = 18), axis.text = element_text(size = 16), legend.text = element_text(size=18), 
+          legend.title = element_text(size = 18))
 }
 
 tiff("BN_pca12_DEG.tiff", units="in", width = 8, height = 6, res = 600)
@@ -376,19 +357,18 @@ dev.off()
 
 ## Plot Bar Graphs comparing numbers of DEGS ## 
 #construct dataframe 
-comparison <- c("H-I vs H-A", "H-I vs L-I", "L-I vs L-A", "H-A vs L-A",
-                    "H-I vs H-A", "H-I vs L-I", "L-I vs L-A", "H-A vs L-A")
+comparison <- c("H-I vs H-A", "L-I vs L-A", "H-A vs L-A",
+                    "H-I vs H-A", "L-I vs L-A", "H-A vs L-A")
 
-species <- c("EN", "EN", "EN", "EN", "EA", "EA", "EA", "EA")
+species <- c("EN", "EN", "EN", "EA", "EA", "EA")
 
-numDEG <- c(nrow(BN.StF.vs.StP.DEG), nrow(BN.StF.vs.SwF.DEG), nrow(BN.SwF.vs.SwP.DEG), nrow(BN.StP.vs.SwP.DEG), 
-                nrow(BA.StF.vs.StP.DEG), nrow(BA.StF.vs.SwF.DEG), nrow(BA.SwF.vs.SwP.DEG), nrow(BA.StP.vs.SwP.DEG))
+numDEG <- c(nrow(BN.StF.vs.StP.DEG), nrow(BN.SwF.vs.SwP.DEG), nrow(BN.StP.vs.SwP.DEG), 
+                nrow(BA.StF.vs.StP.DEG), nrow(BA.SwF.vs.SwP.DEG), nrow(BA.StP.vs.SwP.DEG))
 
 compareDEG <- data.frame(numDEG, species, comparison)
 
 #order factor in order I want in barplot
-compareDEG$comparison <- factor(compareDEG$comparison, levels = c("H-I vs H-A", "L-I vs L-A", 
-                                                                                  "H-I vs L-I", "H-A vs L-A"))
+compareDEG$comparison <- factor(compareDEG$comparison, levels = c("H-I vs H-A", "L-I vs L-A", "H-A vs L-A"))
 #plot
 plot.compareDEG<- ggplot(data = compareDEG, aes(x = comparison, y = numDEG, fill = species)) + geom_bar(stat = "identity", position = position_dodge()) + 
   geom_text(aes(label=numDEG), vjust=1.6, color="white",position = position_dodge(0.9), size=3.5)+
@@ -404,27 +384,6 @@ dev.off()
 #plot barplots separately 
 compareDEG.BN <- compareDEG[compareDEG$species == "EN",]
 compareDEG.BA <- compareDEG[compareDEG$species == "EA",]
-
-#add column to highlight certain comparisons 
-compareDEG.BN$highlight <- as.factor(c(0,0,1,2))
-compareDEG.BA$highlight <- as.factor(c(0,0,1,2))
-
-plot.compareDEG.BN <- ggplot(data = compareDEG.BN, aes(x = comparison, y = numDEG, fill = highlight)) + geom_bar(stat = "identity", position = position_dodge()) +
-                              geom_text(aes(label=numDEG), vjust=1.6, color="white",position = position_dodge(0.9), size=3.5) +
-                              theme_bw()  + xlab("Comparison Type") + ylab ("Number of DEGs") + scale_fill_manual(values = c("0" = "#27187E", "1" = "#ad2e24", "2" = "#ff9b54")) +
-                              theme(legend.position = "none", axis.title = element_text(size = 14), axis.text = element_text(size = 11)) + 
-                              scale_x_discrete(labels = function(x) str_wrap(x, width = 5))
-
-plot.compareDEG.BN
-
-plot.compareDEG.BA <- ggplot(data = compareDEG.BA, aes(x = comparison, y = numDEG, fill = highlight)) + geom_bar(stat = "identity", position = position_dodge()) + 
-  geom_text(aes(label=numDEG), vjust=1.6, color="white",position = position_dodge(0.9), size=3.5) +
-  theme_bw()  + xlab("Comparison Type") + ylab ("Number of DEGs") + scale_fill_manual(values = c("0" = "#27187E", "1" = "#ad2e24", "2" = "#ff9b54")) +
-  theme(legend.position = "none", axis.title = element_text(size = 14), axis.text = element_text(size = 11)) + 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 5))
-
-plot.compareDEG.BA
-
 
 ## Partition genes into clusters using soft clustering ## 
 #try mfuzz method 
@@ -690,7 +649,7 @@ sample.info.BA$Group <- gsub("swamp_pond", "L-A", sample.info.BA$Group)
 cor.color <- colorRampPalette(c("#FFFF00", "black", "#0000FF"))(60) 
 
 #calculate breaks 
-breaks = c(seq(-6, 0, length.out = 30),seq(0.01, 6, length.out = 30))
+breaks = c(seq(-4, 0, length.out = 30),seq(0.01, 4, length.out = 30)) #changed to 4 to fix ramping of colors
 
 set.breaks <- function(expr.data){
   new.breaks <- breaks
@@ -707,7 +666,7 @@ make.heatmap <- function(DEG, sample.anno, gene.anno, sample.hclust, gene.hclust
   pheatmap(DEG, cluster_rows = gene.hclust, cluster_cols = sample.hclust, show_colnames = FALSE, show_rownames = FALSE,
            color = cor.color, breaks = breaks.samp, annotation_row = gene.anno,
            annotation_col = sample.anno, annotation_colors = anno.colors,
-           annotation_names_col = FALSE, annotation_names_row = FALSE, legend_breaks = c(-6,-3,0,3,6), border_color = NA)
+           annotation_names_col = FALSE, annotation_names_row = FALSE, legend_breaks = c(-4,-2,0,2,4), border_color = NA)
 }
 
 #plot
@@ -731,12 +690,10 @@ add.diffExpr <- function(data){
 }
 
 BN.StF.vs.StP.result <- add.diffExpr(BN.StF.vs.StP.result)
-BN.StF.vs.SwF.result <- add.diffExpr(BN.StF.vs.SwF.result)
 BN.StP.vs.SwP.result <- add.diffExpr(BN.StP.vs.SwP.result)
 BN.SwF.vs.SwP.result <- add.diffExpr(BN.SwF.vs.SwP.result)
 
 BA.StF.vs.StP.result <- add.diffExpr(BA.StF.vs.StP.result)
-BA.StF.vs.SwF.result <- add.diffExpr(BA.StF.vs.SwF.result)
 BA.StP.vs.SwP.result <- add.diffExpr(BA.StP.vs.SwP.result)
 BA.SwF.vs.SwP.result <- add.diffExpr(BA.SwF.vs.SwP.result)
 
@@ -752,11 +709,6 @@ BN.StF.vs.StP.volcano <- plot.volcano(BN.StF.vs.StP.result)
 BN.StF.vs.StP.volcano
 dev.off()
 
-tiff("BN_StF.vs.SwF_volcano.tiff", units="in", width = 6, height = 6, res = 600)
-BN.StF.vs.SwF.volcano <- plot.volcano(BN.StF.vs.SwF.result)
-BN.StF.vs.SwF.volcano
-dev.off()
-
 tiff("BN_StP.vs.SwP_volcano.tiff", units="in", width = 6, height = 6, res = 600)
 BN.StP.vs.SwP.volcano <- plot.volcano(BN.StP.vs.SwP.result)
 BN.StP.vs.SwP.volcano
@@ -770,11 +722,6 @@ dev.off()
 tiff("BA_StF.vs.StP_volcano.tiff", units="in", width = 6, height = 6, res = 600)
 BA.StF.vs.StP.volcano <- plot.volcano(BA.StF.vs.StP.result)
 BA.StF.vs.StP.volcano
-dev.off()
-
-tiff("BA_StF.vs.SwF_volcano.tiff", units="in", width = 6, height = 6, res = 600)
-BA.StF.vs.SwF.volcano <- plot.volcano(BA.StF.vs.SwF.result)
-BA.StF.vs.SwF.volcano
 dev.off()
 
 tiff("BA_StP.vs.SwP_volcano.tiff", units="in", width = 6, height = 6, res = 600)
@@ -803,16 +750,16 @@ pond.PCA.panel
 dev.off()
 
 tiff("BN_volcano_panel.tiff", units="in", width = 10, height = 10, res = 600)
-BN.volcano.plot <- ggarrange(BN.StF.vs.SwF.volcano, BN.StP.vs.SwP.volcano, BN.StF.vs.StP.volcano, BN.SwF.vs.SwP.volcano,
-                             labels = c("A", "B", "C", "D"),
+BN.volcano.plot <- ggarrange(BN.StP.vs.SwP.volcano, BN.StF.vs.StP.volcano, BN.SwF.vs.SwP.volcano,
+                             labels = c("A", "B", "C"),
                              ncol = 2, nrow = 2, common.legend = FALSE)
 
 BN.volcano.plot
 dev.off()
 
 tiff("BA_volcano_panel.tiff", units="in", width = 10, height = 10, res = 600)
-BA.volcano.plot <- ggarrange(BA.StF.vs.SwF.volcano, BA.StP.vs.SwP.volcano, BA.StF.vs.StP.volcano, BA.SwF.vs.SwP.volcano,
-                             labels = c("A", "B", "C", "D"),
+BA.volcano.plot <- ggarrange(BA.StP.vs.SwP.volcano, BA.StF.vs.StP.volcano, BA.SwF.vs.SwP.volcano,
+                             labels = c("A", "B", "C"),
                              ncol = 2, nrow = 2, common.legend = FALSE)
 
 BA.volcano.plot
@@ -836,7 +783,6 @@ num.DEG.plot <- ggarrange(plot.compareDEG.BN, plot.compareDEG.BA,
 num.DEG.plot
 dev.off()
 
-
 ## Make lists of genes to analyze for GO analysis ## 
 #make factor lists (genes to analyze)
 BN.mfuzz.cluster5.genes <- data.frame(factor = "BN_mfuzz_cluster5", gene_id = BN.cluster5)
@@ -846,19 +792,17 @@ BA.mfuzz.cluster5.genes <- data.frame(factor = "BA_mfuzz_cluster5", gene_id = BA
 
 #make background lists 
 BN.StF.vs.StP.background <- rownames(BN.StF.vs.StP.result) 
-BN.StF.vs.SwF.background <- rownames(BN.StF.vs.SwF.result) 
 BN.StP.vs.SwP.background <- rownames(BN.StP.vs.SwP.result) 
 BN.SwF.vs.SwP.background <- rownames(BN.SwF.vs.SwP.result)
 
-BN.background <- c(BN.StF.vs.StP.background, BN.StF.vs.SwF.background, BN.StP.vs.SwP.background, BN.SwF.vs.SwP.background)
+BN.background <- c(BN.StF.vs.StP.background, BN.StP.vs.SwP.background, BN.SwF.vs.SwP.background)
 BN.background <- unique(BN.background)
 
 BA.StF.vs.StP.background <- rownames(BA.StF.vs.StP.result) 
-BA.StF.vs.SwF.background <- rownames(BA.StF.vs.SwF.result) 
 BA.StP.vs.SwP.background <- rownames(BA.StP.vs.SwP.result) 
 BA.SwF.vs.SwP.background <- rownames(BA.SwF.vs.SwP.result) 
 
-BA.background <- c(BA.StF.vs.StP.background, BA.StF.vs.SwF.background, BA.StP.vs.SwP.background, BA.SwF.vs.SwP.background)
+BA.background <- c(BA.StF.vs.StP.backgroun, BA.StP.vs.SwP.background, BA.SwF.vs.SwP.background)
 BA.background <- unique(BA.background)
 
 #save gene lists 
