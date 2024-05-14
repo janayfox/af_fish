@@ -33,7 +33,7 @@ module load star/2.7.9a
 
 
 singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/af_fish_RNA \
-trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/SuperTranscripts/AllelicVariants/run_variant_calling.py \
+trinityrnaseq.v2.15.1.simg /lustre04/scratch/janayfox/af_fish_RNA/trinityrnaseq-v2.15.1/Analysis/SuperTranscripts/AllelicVariants/run_variant_calling.py \
 --st_fa /lustre04/scratch/janayfox/af_fish_RNA/BN_super_trinity_genes.fasta \
 --st_gtf /lustre04/scratch/janayfox/af_fish_RNA/BN_super_trinity_genes.gtf \
 --maxram 400000000000 -t 3 \
