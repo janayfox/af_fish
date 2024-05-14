@@ -21,7 +21,7 @@ degBA <- read.table("./data/DEG/BA/salmon/diffExpr.P0.01_C2.matrix")
 
 allExprBN <- read.table("./data/totalExpr/BN_bf_new_sal.gene.TMM.EXPR.matrix")
 allExprBA <- read.table("./data/totalExpr/BA_bf_new_sal.gene.TMM.EXPR.matrix")
-0
+
 BN.StF.vs.StP.DEG <- read.table("./data/DEG/BN/salmon/BN_bf_new_sal.gene.counts.matrix.stream_field_vs_stream_pond.edgeR.DE_results.P0.01_C2.DE.subset")
 BN.StF.vs.SwF.DEG <- read.table("./data/DEG/BN/salmon/BN_bf_new_sal.gene.counts.matrix.stream_field_vs_swamp_field.edgeR.DE_results.P0.01_C2.DE.subset")
 BN.StP.vs.SwP.DEG <- read.table("./data/DEG/BN/salmon/BN_bf_new_sal.gene.counts.matrix.stream_pond_vs_swamp_pond.edgeR.DE_results.P0.01_C2.DE.subset")
@@ -41,6 +41,33 @@ BA.StF.vs.StP.result <- read.table("./data/DEG/BA/salmon/BA_bf_new_sal.gene.coun
 BA.StF.vs.SwF.result <- read.table("./data/DEG/BA/salmon/BA_bf_new_sal.gene.counts.matrix.stream_field_vs_swamp_field.edgeR.DE_results")
 BA.StP.vs.SwP.result <- read.table("./data/DEG/BA/salmon/BA_bf_new_sal.gene.counts.matrix.stream_pond_vs_swamp_pond.edgeR.DE_results")
 BA.SwF.vs.SwP.result <- read.table("./data/DEG/BA/salmon/BA_bf_new_sal.gene.counts.matrix.swamp_field_vs_swamp_pond.edgeR.DE_results")
+
+#try filtered results
+degBN <- read.table("./data/DEG/filtered/BN/diffExpr.P0.01_C2.matrix")
+degBA <- read.table("./data/DEG/filtered/BA/diffExpr.P0.01_C2.matrix")
+
+allExprBN <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.TMM.EXPR.matrix")
+allExprBA <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.TMM.EXPR.matrix")
+
+BN.StF.vs.StP.DEG <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.stream_field_vs_stream_pond.edgeR.DE_results.P0.01_C2.DE.subset")
+BN.StF.vs.SwF.DEG <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.stream_field_vs_swamp_field.edgeR.DE_results.P0.01_C2.DE.subset")
+BN.StP.vs.SwP.DEG <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.stream_pond_vs_swamp_pond.edgeR.DE_results.P0.01_C2.DE.subset")
+BN.SwF.vs.SwP.DEG <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.swamp_field_vs_swamp_pond.edgeR.DE_results.P0.01_C2.DE.subset")
+
+BA.StF.vs.StP.DEG <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.stream_field_vs_stream_pond.edgeR.DE_results.P0.01_C2.DE.subset")
+BA.StF.vs.SwF.DEG <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.stream_field_vs_swamp_field.edgeR.DE_results.P0.01_C2.DE.subset")
+BA.StP.vs.SwP.DEG <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.stream_pond_vs_swamp_pond.edgeR.DE_results.P0.01_C2.DE.subset")
+BA.SwF.vs.SwP.DEG <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.swamp_field_vs_swamp_pond.edgeR.DE_results.P0.01_C2.DE.subset")
+
+BN.StF.vs.StP.result <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.stream_field_vs_stream_pond.edgeR.DE_results")
+BN.StF.vs.SwF.result <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.stream_field_vs_swamp_field.edgeR.DE_results")
+BN.StP.vs.SwP.result <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.stream_pond_vs_swamp_pond.edgeR.DE_results")
+BN.SwF.vs.SwP.result <- read.table("./data/DEG/filtered/BN/BN_bf_filtered_sal.gene.counts.matrix.swamp_field_vs_swamp_pond.edgeR.DE_results")
+
+BA.StF.vs.StP.result <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.stream_field_vs_stream_pond.edgeR.DE_results")
+BA.StF.vs.SwF.result <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.stream_field_vs_swamp_field.edgeR.DE_results")
+BA.StP.vs.SwP.result <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.stream_pond_vs_swamp_pond.edgeR.DE_results")
+BA.SwF.vs.SwP.result <- read.table("./data/DEG/filtered/BA/BA_bf_filtered_sal.gene.counts.matrix.swamp_field_vs_swamp_pond.edgeR.DE_results")
 
 ## Compare direction of DEGs
 #prepare data to combine 
@@ -102,8 +129,14 @@ BN.corr <- cor.test(BN.FC.overlap$logFC_StPvsSwP, BN.FC.overlap$logFC_SwFvsSwP, 
 BA.corr <- cor.test(BA.FC.overlap$logFC_StPvsSwP, BA.FC.overlap$logFC_SwFvsSwP, method = "pearson")
 
 #run binomial exact test 
-BN.binom <- binom.test(0, 31, p = 0.5, alternative = "less")
+BN.binom <- binom.test(0, 31, p = 0.5, alternative = "less") #need to change these numbers if i update to filtered method?? 
 BA.binom <- binom.test(1, 269, p = 0.5, alternative = "less")
+
+#save lists of evolved and plastic genes 
+write.table(rownames(BN.FC.plastic), file = "./data/DEG/BN_plastic_list.tsv", row.names = FALSE, sep = "/t")
+write.table(rownames(BA.FC.plastic), file = "./data/DEG/BA_plastic_list.tsv", row.names = FALSE, sep = "/t")
+write.table(rownames(BN.FC.evol), file = "./data/DEG/BN_evolved_list.tsv", row.names = FALSE, sep = "/t")
+write.table(rownames(BA.FC.evol), file = "./data/DEG/BA_evolved_list.tsv", row.names = FALSE, sep = "/t")
 
 ## Run permutation test ##
 #remove NAs from list of all genes 
@@ -157,13 +190,13 @@ BA.perm.pval <- sum(unlist(BA.res) < -0.792) / 10000
 #adjust sign on one comparison so that it matches actual relationship 
 BN.FC.overlap$logFC_SwFvsSwP <- -1 * BN.FC.overlap$logFC_SwFvsSwP
 BA.FC.overlap$logFC_SwFvsSwP <- -1 * BA.FC.overlap$logFC_SwFvsSwP
-
+    
 scat.plot <- function(data){
   ggplot(data, aes(x = logFC_SwFvsSwP, y = logFC_StPvsSwP)) + geom_point(alpha = 0.6, colour = "#27187E") + theme_bw() +
     labs(x = paste0("Log2 FC Plastic change in L-DO source" ), 
          y = paste0("Log2 FC Evolutionary change")) + 
     geom_vline(xintercept = 0, linewidth = 0.5) + geom_hline(yintercept = 0, linewidth = 0.5) +
-    theme(axis.title = element_text(size = 14), axis.text = element_text(size = 11), legend.position = "none") 
+    theme(axis.title = element_text(size = 9), axis.text = element_text(size = 8), legend.position = "none") 
 }
 
 BN.scat.plot <- scat.plot(BN.FC.overlap)
@@ -173,8 +206,8 @@ BA.scat.plot <- scat.plot(BA.FC.overlap)
 BA.scat.plot
 
 #save plots 
-ggsave("BN_logFC_scatterplot_updated.tiff", plot = BN.hist.plot, device = "tiff", width = 8, height = 6, units = "in", dpi = 600)  
-ggsave("BA_logFC_scatterplot_updated.tiff", plot = BA.hist.plot, device = "tiff", width = 8, height = 6, units = "in", dpi = 600)  
+ggsave("BN_logFC_scatterplot_updated.tiff", plot = BN.scat.plot, device = "tiff", width = 5, height = 5, units = "in", dpi = 300)  
+ggsave("BA_logFC_scatterplot_updated.png", plot = BA.scat.plot, device = "png", width = 5, height = 5, units = "in", dpi = 300)  
 
 ## Compare average magnitude FC between species ##
 #isolate the DEGs we want to compare 
@@ -271,6 +304,11 @@ mann.whitney.panel <- plastic.boxplot + evol.boxplot + plot_annotation(tag_level
 mann.whitney.panel
 
 ggsave("foldChange_panel_updated.tiff", plot = mann.whitney.panel, device = "tiff", width = 6, height = 4, units = "in", dpi = 600)
+
+scatter.panel <-  BN.scat.plot + BA.scat.plot + plot_annotation(tag_levels = "A")
+scatter.panel
+
+ggsave("scatter_panel_updated.tiff", plot = scatter.panel, device = "tiff", width = 6, height = 4, units = "in", dpi = 600)
 
 ##Plot Venn Diagram
 BN.plast.list <- rownames(BN.FC.plastic)

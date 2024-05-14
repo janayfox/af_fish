@@ -22,6 +22,7 @@ library(GGally)
 library(Mfuzz)
 library(dplyr)
 library(ggpubr)
+library(reshape2)
 
 #read in data 
 degBN <- read.table("./data/DEG/BN/salmon/diffExpr.P0.01_C2.matrix")
@@ -57,6 +58,169 @@ BN.pond.data[,1] <- NULL
 BA.pond.data <- read.csv("./data/pondData/pond_data_BA.csv")
 rownames(BA.pond.data) <- BA.pond.data[,1] 
 BA.pond.data[,1] <- NULL
+
+## read in functions ## 
+#function to extract expression of DEGs 
+extractDEG <- function(DEG.df, DEG.list){
+  return(DEG.df[DEG.list,])
+}
+
+#function to log transform data
+log.trans <- function(df){
+  return(log((df + 1), 2))
+}
+
+#function to median center data
+med.center <- function(df){
+  rowMed <- apply(df, 1, median)
+  return(df-rowMed)
+}
+
+#function to transpose data
+transpose.names <- function(data){
+  t.data <- t(data)
+  rownames(t.data) <- colnames(data)
+  colnames(t.data) <- rownames(data)
+  return(as.data.frame(t.data))
+}
+
+#functions to add on site and collection data for each species
+add.site.collection.BN <- function(data.BN) {
+  data.BN.new <- tibble::rownames_to_column(data.BN, "group")
+  data.BN.new$group <- str_sub(data.BN.new$group, end = -13)
+  
+  data.BN.new$site <- data.BN.new$group
+  data.BN.new$site <- str_sub(data.BN.new$site, end = -6)
+  data.BN.new$site <- gsub("_", "", data.BN.new$site)
+  
+  data.BN.new$collection <- data.BN.new$group
+  data.BN.new$collection <- str_sub(data.BN.new$collection, start = 7)
+  data.BN.new$collection <- gsub("_", "", data.BN.new$collection)
+  
+  rownames(data.BN.new) <- rownames(data.BN)
+  return(data.BN.new)
+}
+
+add.site.collection.BA <- function(data.BA) {
+  data.BA.new <- tibble::rownames_to_column(data.BA, "group")
+  data.BA.new$group <- str_sub(data.BA.new$group, end = -10)
+  data.BA.new$group <- gsub("d_", "d", data.BA.new$group)
+  
+  data.BA.new$site <- data.BA.new$group
+  data.BA.new$site <- str_sub(data.BA.new$site, end = -6)
+  data.BA.new$site <- gsub("_", "", data.BA.new$site)
+  
+  data.BA.new$collection <- data.BA.new$group
+  data.BA.new$collection <- str_sub(data.BA.new$collection, start = 7)
+  data.BA.new$collection <- gsub("_", "", data.BA.new$collection)
+  
+  rownames(data.BA.new) <- rownames(data.BA)
+  
+  return(data.BA.new)
+}
+
+#function to plot PCAs
+plot.pca <- function(pca.data, pca.x, pca.y, xlabel, ylabel){
+  ggplot(data = pca.data, aes(x = pca.x, y = pca.y, color = group, shape = group)) + theme_bw() + geom_point() +
+    scale_color_manual(name = "Source and Collection",
+                       values = c("#27187E", "#82DCDA", "#ad2e24", "#ff9b54"), 
+                       labels = c("H-I", "H-A", 
+                                  "L-I", "L-A")) + 
+    scale_shape_manual(name = "Source and Collection",
+                       labels = c("H-I", "H-A", 
+                                  "L-I", "L-A"),
+                       values = c(15, 17, 15, 17)) + 
+    geom_hline(yintercept = 0, linetype = "dashed") + geom_vline(xintercept = 0, linetype = "dashed") + 
+    stat_ellipse(aes(group = group)) + xlab(xlabel) + ylab(ylabel) +
+    theme(axis.title = element_text(size = 18), axis.text = element_text(size = 16), legend.text = element_text(size=18), 
+          legend.title = element_text(size = 18))
+}
+
+# function to plot PCA with pond information 
+plot.pond.pca <- function(pca.data, pca.x, pca.y, xlabel, ylabel){
+  ggplot(data = pca.data, aes(x = pca.x, y = pca.y, color = pond, shape = group)) + theme_bw() + geom_point() +
+    scale_color_manual(values = c("#ad2e24", "#27187E", "#82DCDA")) + 
+    scale_shape_manual(values = c(16, 15, 17, 4), labels = c("H-I", "H-A", 
+                                                             "L-I", "L-A")) +
+    labs(color = "Pond", shape = "Group") + geom_hline(yintercept = 0, linetype = "dashed") + 
+    geom_vline(xintercept = 0, linetype = "dashed") + stat_ellipse(aes(group = pond)) + xlab(xlabel) + ylab(ylabel) +
+    theme(axis.title = element_text(size = 14), axis.text = element_text(size = 11), legend.text = element_text(size=11))
+}
+
+#function to plot mFuzz clusters for both species
+mfuzz.plot.BN <- function(filename, mfuzz.cl, r, c){
+  tiff(filename, units="in", width = 14, height = 14, res = 600)
+  par(mar=c(5,6,4,1) + 0.1)
+  mfuzz.plot2(BN.DEG.log.eset.std, cl = mfuzz.cl, min.mem = 0.7, 
+              time.labels = c("HDO.I", "HDO.I", "HDO.I", "HDO.I",
+                              "HDO.I", "HDO.I", "HDO.I", "HDO.I",
+                              "HDO.I","HDO.A", "HDO.A", "HDO.A",
+                              "HDO.A", "HDO.A", "HDO.A", "HDO.A",
+                              "HDO.A", "LDO.A", "LDO.A", "LDO.A",
+                              "LDO.A", "LDO.A", "LDO.A", "LDO.A",
+                              "LDO.I", "LDO.I", "LDO.I", "LDO.I",
+                              "LDO.I", "LDO.I", "LDO.I", "LDO.I"),
+              xlab = "Source & Collection", ylab = "Relative Expression", 
+              mfrow = c(r,c), x11 = FALSE, cex.lab = 2.5, cex.main = 3, cex.axis = 1.75)
+  dev.off()
+}
+
+mfuzz.plot.BA <- function(filename, mfuzz.cl, r, c){
+  tiff(filename, units="in", width = 12, height = 12, res = 600)
+  par(mar=c(5,6,4,1) + 0.1)
+  mfuzz.plot2(BA.DEG.log.eset.std, cl = mfuzz.cl, min.mem = 0.7, 
+              time.labels = c("HDO.I", "HDO.I", "HDO.I", "HDO.I",
+                              "HDO.I", "HDO.I", "HDO.I", "HDO.I",
+                              "HDO.I","HDO.A", "HDO.A", "HDO.A",
+                              "HDO.A", "HDO.A", "HDO.A", "HDO.A",
+                              "LDO.A", "LDO.A", "LDO.A", "LDO.A",
+                              "LDO.A", "LDO.A", "LDO.A", "LDO.A",
+                              "LDO.A", "LDO.A", "LDO.A", "LDO.I",
+                              "LDO.I", "LDO.I", "LDO.I", "LDO.I",
+                              "LDO.I", "LDO.I", "LDO.I", "LDO.I",
+                              "LDO.I"),
+              xlab = "Source & Collection", ylab = "Relative Expression", 
+              mfrow = c(r,c), x11 = FALSE, cex.lab = 2.5, cex.main = 3, cex.axis = 1.75)
+  dev.off()
+}
+
+#function to set breaks for heatmaps
+set.breaks <- function(expr.data){
+  new.breaks <- breaks
+  new.breaks[length(breaks)] <- max(max(expr.data),max(breaks))
+  new.breaks[1] <- min(min(expr.data),min(breaks))
+  return(new.breaks)
+}
+
+#function to plot heatmaps
+make.heatmap <- function(DEG, sample.anno, gene.anno, sample.hclust, gene.hclust, breaks.samp, anno.colors){
+  pheatmap(DEG, cluster_rows = gene.hclust, cluster_cols = sample.hclust, show_colnames = FALSE, show_rownames = FALSE,
+           color = cor.color, breaks = breaks.samp, annotation_row = gene.anno,
+           annotation_col = sample.anno, annotation_colors = anno.colors,
+           annotation_names_col = FALSE, annotation_names_row = FALSE, legend_breaks = c(-4,-2,0,2,4), border_color = NA)
+}
+
+# function to add in information on up/down regulation
+add.diffExpr <- function(data){
+  data$diffExpr <- "NO"
+  data$diffExpr[data$logFC >= 2 & data$FDR <= 0.01] <- "UP"
+  data$diffExpr[data$logFC <= -2 & data$FDR <= 0.01] <- "DOWN"
+  return(data)
+}
+
+#function for plotting volcano plots
+plot.volcano <- function(data){
+  ggplot(data = data, aes(x = logFC, y = -log2(FDR), col = diffExpr)) + geom_point(alpha = 0.7) + 
+    theme_bw() + scale_color_manual(values =  c("#e76f51", "black", "#82DCDA")) + xlab("log2(FC)") + ylab("-log2(FDR)") +
+    theme(axis.title = element_text(size = 14), axis.text = element_text(size = 11), legend.position = "none")
+}
+
+## Check number of genes retained in DEG analysis ## 
+BA_genes <- c(rownames(BA.StF.vs.StP.result), rownames(BA.StP.vs.SwP.result), rownames(BA.SwF.vs.SwP.result))
+BA_genes <- unique(BA_genes)
+
+BN_genes <- c(rownames(BN.StF.vs.StP.result), rownames(BN.StP.vs.SwP.result), rownames(BN.SwF.vs.SwP.result))
+BN_genes <- unique(BN_genes)
 
 ##  Make UpSet plots and venn diagrams ## 
 #get dataframe in proper format 
@@ -108,38 +272,18 @@ BA.DEG.list <- c(BA.StF.vs.StP.DEG.list$gene, BA.SwF.vs.SwP.DEG.list$gene, BA.St
 BA.DEG.list <- unique(BA.DEG.list) #remove duplicates
 
 #extract DEG
-extractDEG <- function(DEG.df, DEG.list){
-  return(DEG.df[DEG.list,])
-}
-
 BN.DEG <- extractDEG(allExprBN, BN.DEG.list)
 BA.DEG <- extractDEG(allExprBA, BA.DEG.list)
 
 #log2 transform data 
-log.trans <- function(df){
-  return(log((df + 1), 2))
-}
-
 BN.DEG.log <- log.trans(BN.DEG)
 BA.DEG.log <- log.trans(BA.DEG)
 
 #median center data 
-med.center <- function(df){
-  rowMed <- apply(df, 1, median)
-  return(df-rowMed)
-}
-
 BN.DEG.log.center <- med.center(BN.DEG.log)
 BA.DEG.log.center <- med.center(BA.DEG.log)
 
 #transpose data 
-transpose.names <- function(data){
-  t.data <- t(data)
-  rownames(t.data) <- colnames(data)
-  colnames(t.data) <- rownames(data)
-  return(as.data.frame(t.data))
-}
-
 t.BN.DEG.log.center <- transpose.names(BN.DEG.log.center)
 t.BA.DEG.log.center <- transpose.names(BA.DEG.log.center)
 
@@ -156,81 +300,31 @@ t.BN.DEG.log.center <- cbind(t.BN.DEG.log.center, pca.BN.DEG$x[,1:4])
 t.BA.DEG.log.center <- cbind(t.BA.DEG.log.center, pca.BA.DEG$x[,1:4])
 
 #add on site and collection data 
-add.site.collection.BN <- function(data.BN) {
-  data.BN.new <- tibble::rownames_to_column(data.BN, "group")
-  data.BN.new$group <- str_sub(data.BN.new$group, end = -13)
-  
-  data.BN.new$site <- data.BN.new$group
-  data.BN.new$site <- str_sub(data.BN.new$site, end = -6)
-  data.BN.new$site <- gsub("_", "", data.BN.new$site)
-  
-  data.BN.new$collection <- data.BN.new$group
-  data.BN.new$collection <- str_sub(data.BN.new$collection, start = 7)
-  data.BN.new$collection <- gsub("_", "", data.BN.new$collection)
-  
-  rownames(data.BN.new) <- rownames(data.BN)
-  return(data.BN.new)
-}
-
-add.site.collection.BA <- function(data.BA) {
-  data.BA.new <- tibble::rownames_to_column(data.BA, "group")
-  data.BA.new$group <- str_sub(data.BA.new$group, end = -10)
-  data.BA.new$group <- gsub("d_", "d", data.BA.new$group)
-  
-  data.BA.new$site <- data.BA.new$group
-  data.BA.new$site <- str_sub(data.BA.new$site, end = -6)
-  data.BA.new$site <- gsub("_", "", data.BA.new$site)
-  
-  data.BA.new$collection <- data.BA.new$group
-  data.BA.new$collection <- str_sub(data.BA.new$collection, start = 7)
-  data.BA.new$collection <- gsub("_", "", data.BA.new$collection)
-  
-  rownames(data.BA.new) <- rownames(data.BA)
-  
-  return(data.BA.new)
-}
-
 t.BN.DEG.log.center <- add.site.collection.BN(t.BN.DEG.log.center)
 t.BA.DEG.log.center <- add.site.collection.BA(t.BA.DEG.log.center)
 
 #plot PCA
-plot.pca <- function(pca.data, pca.x, pca.y, xlabel, ylabel){
-  ggplot(data = pca.data, aes(x = pca.x, y = pca.y, color = group, shape = group)) + theme_bw() + geom_point() +
-    scale_color_manual(name = "Source and Collection",
-                      values = c("#27187E", "#82DCDA", "#ad2e24", "#ff9b54"), 
-                       labels = c("H-I", "H-A", 
-                                  "L-I", "L-A")) + 
-    scale_shape_manual(name = "Source and Collection",
-                       labels = c("H-I", "H-A", 
-                                  "L-I", "L-A"),
-                       values = c(15, 17, 15, 17)) + 
-    geom_hline(yintercept = 0, linetype = "dashed") + geom_vline(xintercept = 0, linetype = "dashed") + 
-    stat_ellipse(aes(group = group)) + xlab(xlabel) + ylab(ylabel) +
-    theme(axis.title = element_text(size = 18), axis.text = element_text(size = 16), legend.text = element_text(size=18), 
-          legend.title = element_text(size = 18))
-}
-
-tiff("BN_pca12_DEG.tiff", units="in", width = 8, height = 6, res = 600)
+tiff("BN_pca12_DEG_filtered.tiff", units="in", width = 8, height = 6, res = 600)
 BN.DEG.pca12.plot <- plot.pca(t.BN.DEG.log.center, t.BN.DEG.log.center$PC1, 
-                                  t.BN.DEG.log.center$PC2, "PC1 (43.4%)", "PC2 (13.2%)")
+                                  t.BN.DEG.log.center$PC2, "PC1 (46.2%)", "PC2 (11.6%)")
 BN.DEG.pca12.plot
 dev.off()
 
 tiff("BN_pca23_DEG.tiff", units="in", width = 8, height = 6, res = 600)
 BN.DEG.pca23.plot <- plot.pca(t.BN.DEG.log.center, t.BN.DEG.log.center$PC2, 
-                                  t.BN.DEG.log.center$PC3, "PC2 (13.2%)", "PC3 (9.3%)")
+                                  t.BN.DEG.log.center$PC3, "PC2 (11.6%)", "PC3 (9.5%)")
 BN.DEG.pca23.plot
 dev.off()
 
-tiff("BA_pca12_DEG.tiff", units="in", width = 8, height = 6, res = 600)
+tiff("BA_pca12_DEG_filtered.tiff", units="in", width = 8, height = 6, res = 600)
 BA.DEG.pca12.plot <- plot.pca(t.BA.DEG.log.center, t.BA.DEG.log.center$PC1, 
-                                  t.BA.DEG.log.center$PC2, "PC1 (61.5%)", "PC2 (13.1%)")
+                                  t.BA.DEG.log.center$PC2, "PC1 (66.1%)", "PC2 (13.1%)")
 BA.DEG.pca12.plot
 dev.off()
 
 tiff("BA_pca23_DEG.tiff", units="in", width = 8, height = 6, res = 600)
 BA.DEG.pca23.plot <- plot.pca(t.BA.DEG.log.center, t.BA.DEG.log.center$PC2, 
-                                  t.BA.DEG.log.center$PC3, "PC2 (13.1%)", "PC3 (7.6%)")
+                                  t.BA.DEG.log.center$PC3, "PC2 (13.1%)", "PC3 (5.5%)")
 BA.DEG.pca23.plot
 dev.off()
 
@@ -244,17 +338,7 @@ t.BA.DEG.log.center <- merge(t.BA.DEG.log.center, BA.pond.data, by = "row.names"
 rownames(t.BA.DEG.log.center) <- t.BA.DEG.log.center[,1]
 t.BA.DEG.log.center[,1] <- NULL
 
-#plot PCA with pond information 
-plot.pond.pca <- function(pca.data, pca.x, pca.y, xlabel, ylabel){
-  ggplot(data = pca.data, aes(x = pca.x, y = pca.y, color = pond, shape = group)) + theme_bw() + geom_point() +
-    scale_color_manual(values = c("#ad2e24", "#27187E", "#82DCDA")) + 
-    scale_shape_manual(values = c(16, 15, 17, 4), labels = c("H-I", "H-A", 
-                                                             "L-I", "L-A")) +
-    labs(color = "Pond", shape = "Group") + geom_hline(yintercept = 0, linetype = "dashed") + 
-    geom_vline(xintercept = 0, linetype = "dashed") + stat_ellipse(aes(group = pond)) + xlab(xlabel) + ylab(ylabel) +
-    theme(axis.title = element_text(size = 14), axis.text = element_text(size = 11), legend.text = element_text(size=11))
-}
-
+#plot with pond info
 tiff("BN_pca12_DEG_pond.tiff", units="in", width = 8, height = 6, res = 600)
 BN.DEG.pca12.pond.plot <- plot.pond.pca(t.BN.DEG.log.center, t.BN.DEG.log.center$PC1, t.BN.DEG.log.center$PC2, "PC1 (43.4%)", "PC2 (13.2%)")
 BN.DEG.pca12.pond.plot
@@ -304,8 +388,8 @@ t.allExprBN.log.center <- cbind(t.allExprBN.log.center, pca.allExpr.BN$x[,1:4])
 t.allExprBA.log.center <- cbind(t.allExprBA.log.center, pca.allExpr.BA$x[,1:4])
 
 #plot PCA
-tiff("BN_pca12_allExpr.tiff", units="in", width = 8, height = 6, res = 600)
-allExprBN.pca12.plot <- plot.pca(t.allExprBN.log.center, t.allExprBN.log.center$PC1, t.allExprBN.log.center$PC2, "PC1 (9%)", "PC2 (5.8%)")
+tiff("BN_pca12_allExpr_filtered.tiff", units="in", width = 8, height = 6, res = 600)
+allExprBN.pca12.plot <- plot.pca(t.allExprBN.log.center, t.allExprBN.log.center$PC1, t.allExprBN.log.center$PC2, "PC1 (9.6%)", "PC2 (5.8%)")
 allExprBN.pca12.plot
 dev.off()
 
@@ -314,8 +398,8 @@ allExprBN.pca23.plot <- plot.pca(t.allExprBN.log.center, t.allExprBN.log.center$
 allExprBN.pca23.plot
 dev.off()
 
-tiff("BA_pca12_allExpr.tiff", units="in", width = 8, height = 6, res = 600)
-allExprBA.pca12.plot <- plot.pca(t.allExprBA.log.center, t.allExprBA.log.center$PC1, t.allExprBA.log.center$PC2, "PC1 (14.4%)", "PC2 (7.3%)")
+tiff("BA_pca12_allExpr_filtered.tiff", units="in", width = 8, height = 6, res = 600)
+allExprBA.pca12.plot <- plot.pca(t.allExprBA.log.center, t.allExprBA.log.center$PC1, t.allExprBA.log.center$PC2, "PC1 (18.9%)", "PC2 (7.7%)")
 allExprBA.pca12.plot
 dev.off()
 
@@ -355,6 +439,46 @@ allExprBA.pca23.pond.plot <- plot.pond.pca(t.allExprBA.log.center, t.allExprBA.l
 allExprBA.pca23.pond.plot
 dev.off()
 
+## check for effect of pond on overall gene expression ##
+#convert dataframe to correct format for analysis 
+BA.matrix <- t.allExprBA.log.center[t.allExprBA.log.center$pond != "Field",] #get only pond samples
+BN.matrix <- t.allExprBN.log.center[t.allExprBN.log.center$pond != "Field",]
+
+# check for effect of pond on PCs 
+summary(aov(PC1 ~ pond, data = BA.matrix))
+summary(aov(PC2 ~ pond, data = BA.matrix))
+summary(aov(PC3 ~ pond, data = BA.matrix))
+summary(aov(PC4 ~ pond, data = BA.matrix))
+
+summary(aov(PC1 ~ pond, data = BN.matrix))
+summary(aov(PC2 ~ pond, data = BN.matrix))
+summary(aov(PC3 ~ pond, data = BN.matrix))
+summary(aov(PC4 ~ pond, data = BN.matrix))
+
+#convert dataframe to correct format for analysis 
+BA.matrix <- t.BA.DEG.log.center[t.BA.DEG.log.center$pond != "Field",] #get only pond samples
+BN.matrix <- t.BN.DEG.log.center[t.BN.DEG.log.center$pond != "Field",]
+
+col.drop <- c("PC1", "PC2", "PC3", "PC4", "collection", "group") #drop other variables
+BA.matrix <- BA.matrix[, !(names(BA.matrix) %in% col.drop)]
+BN.matrix <- BN.matrix[, !(names(BN.matrix) %in% col.drop)]
+
+BA.matrix <- rownames_to_column(BA.matrix, var = "individual")
+BN.matrix <- rownames_to_column(BN.matrix, var = "individual")
+
+melt_BA <- melt(BA.matrix, id.vars = c("pond", "site", "individual"), variable.name = "gene_ID", value.name = "gene_expression")
+melt_BN <- melt(BN.matrix, id.vars = c("pond", "site", "individual"), variable.name = "gene_ID", value.name = "gene_expression")
+
+#fit model 
+fit.BA <- lm(gene_expression ~ gene_ID + individual + site + pond, data = melt_BA)
+fit.BN <- lm(gene_expression ~ gene_ID + individual + site + pond, data = melt_BN)
+
+an.res.BA <- anova(fit.BA)
+an.res.BN <- anova(fit.BN)
+
+an.res.BA
+an.res.BN
+
 ## Plot Bar Graphs comparing numbers of DEGS ## 
 #construct dataframe 
 comparison <- c("H-I vs H-A", "L-I vs L-A", "H-A vs L-A",
@@ -369,6 +493,7 @@ compareDEG <- data.frame(numDEG, species, comparison)
 
 #order factor in order I want in barplot
 compareDEG$comparison <- factor(compareDEG$comparison, levels = c("H-I vs H-A", "L-I vs L-A", "H-A vs L-A"))
+
 #plot
 plot.compareDEG<- ggplot(data = compareDEG, aes(x = comparison, y = numDEG, fill = species)) + geom_bar(stat = "identity", position = position_dodge()) + 
   geom_text(aes(label=numDEG), vjust=1.6, color="white",position = position_dodge(0.9), size=3.5)+
@@ -384,6 +509,24 @@ dev.off()
 #plot barplots separately 
 compareDEG.BN <- compareDEG[compareDEG$species == "EN",]
 compareDEG.BA <- compareDEG[compareDEG$species == "EA",]
+
+plot.compareDEG.BN<- ggplot(data = compareDEG.BN, aes(x = comparison, y = numDEG)) + geom_bar(stat = "identity", position = position_dodge(), fill = "#27187E") + 
+  geom_text(aes(label=numDEG), vjust=1.6, color="white",position = position_dodge(0.9), size=3.5)+
+  theme_bw() + 
+  xlab("Comparison Type") + ylab ("Number of DEGs") + labs(fill = "Species") +
+  theme(legend.position = "bottom", axis.title = element_text(size = 14), axis.text = element_text(size = 11),
+        legend.text = element_text(size=11)) + scale_x_discrete(labels = function(x) str_wrap(x, width = 5))
+
+plot.compareDEG.BA<- ggplot(data = compareDEG.BA, aes(x = comparison, y = numDEG)) + geom_bar(stat = "identity", position = position_dodge(), fill = "#27187E") + 
+  geom_text(aes(label=numDEG), vjust=1.6, color="white",position = position_dodge(0.9), size=3.5)+
+  theme_bw() + 
+  xlab("Comparison Type") + ylab ("Number of DEGs") + labs(fill = "Species") +
+  theme(legend.position = "bottom", axis.title = element_text(size = 14), axis.text = element_text(size = 11),
+        legend.text = element_text(size=11)) + scale_x_discrete(labels = function(x) str_wrap(x, width = 5))
+
+tiff("BA_barplot.tiff", units="in", width = 6, height = 7, res = 600)
+plot.compareDEG.BA
+dev.off()
 
 ## Partition genes into clusters using soft clustering ## 
 #try mfuzz method 
@@ -457,42 +600,6 @@ mfuzz.BA.19 <- mfuzz(BA.DEG.log.eset.std, m = m.BA, c = 19)
 mfuzz.BA.20 <- mfuzz(BA.DEG.log.eset.std, m = m.BA, c = 20)
 
 #plot clusters
-mfuzz.plot.BN <- function(filename, mfuzz.cl, r, c){
-  tiff(filename, units="in", width = 14, height = 14, res = 600)
-  par(mar=c(5,6,4,1) + 0.1)
-  mfuzz.plot2(BN.DEG.log.eset.std, cl = mfuzz.cl, min.mem = 0.7, 
-              time.labels = c("HDO.I", "HDO.I", "HDO.I", "HDO.I",
-                              "HDO.I", "HDO.I", "HDO.I", "HDO.I",
-                              "HDO.I","HDO.A", "HDO.A", "HDO.A",
-                              "HDO.A", "HDO.A", "HDO.A", "HDO.A",
-                              "HDO.A", "LDO.A", "LDO.A", "LDO.A",
-                              "LDO.A", "LDO.A", "LDO.A", "LDO.A",
-                              "LDO.I", "LDO.I", "LDO.I", "LDO.I",
-                              "LDO.I", "LDO.I", "LDO.I", "LDO.I"),
-              xlab = "Source & Collection", ylab = "Relative Expression", 
-              mfrow = c(r,c), x11 = FALSE, cex.lab = 2.5, cex.main = 3, cex.axis = 1.75)
-  dev.off()
-  }
-
-mfuzz.plot.BA <- function(filename, mfuzz.cl, r, c){
-  tiff(filename, units="in", width = 12, height = 12, res = 600)
-  par(mar=c(5,6,4,1) + 0.1)
-  mfuzz.plot2(BA.DEG.log.eset.std, cl = mfuzz.cl, min.mem = 0.7, 
-              time.labels = c("HDO.I", "HDO.I", "HDO.I", "HDO.I",
-                            "HDO.I", "HDO.I", "HDO.I", "HDO.I",
-                            "HDO.I","HDO.A", "HDO.A", "HDO.A",
-                            "HDO.A", "HDO.A", "HDO.A", "HDO.A",
-                            "LDO.A", "LDO.A", "LDO.A", "LDO.A",
-                            "LDO.A", "LDO.A", "LDO.A", "LDO.A",
-                            "LDO.A", "LDO.A", "LDO.A", "LDO.I",
-                            "LDO.I", "LDO.I", "LDO.I", "LDO.I",
-                            "LDO.I", "LDO.I", "LDO.I", "LDO.I",
-                            "LDO.I"),
-              xlab = "Source & Collection", ylab = "Relative Expression", 
-              mfrow = c(r,c), x11 = FALSE, cex.lab = 2.5, cex.main = 3, cex.axis = 1.75)
-  dev.off()
-}
-
 mfuzz.plot.BN("BN2_mfuzz_plot.tiff", mfuzz.BN.2, 2, 1)
 mfuzz.plot.BN("BN3_mfuzz_plot.tif", mfuzz.BN.3, 2, 2)
 mfuzz.plot.BN("BN4_mfuzz_plot.tiff", mfuzz.BN.4, 2, 2)
@@ -648,26 +755,16 @@ sample.info.BA$Group <- gsub("swamp_pond", "L-A", sample.info.BA$Group)
 #generate color pallette 
 cor.color <- colorRampPalette(c("#FFFF00", "black", "#0000FF"))(60) 
 
+#remove NAs
+BN.DEG.log.center.mfuzz <- na.omit(BN.DEG.log.center.mfuzz)
+BA.DEG.log.center.mfuzz <- na.omit(BA.DEG.log.center.mfuzz)
+
 #calculate breaks 
 breaks = c(seq(-4, 0, length.out = 30),seq(0.01, 4, length.out = 30)) #changed to 4 to fix ramping of colors
 
-set.breaks <- function(expr.data){
-  new.breaks <- breaks
-  new.breaks[length(breaks)] <- max(max(expr.data),max(breaks))
-  new.breaks[1] <- min(min(expr.data),min(breaks))
-  return(new.breaks)
-}
-
+#set breaks
 BN.DEG.breaks <- set.breaks(BN.DEG.log.center)
 BA.DEG.breaks <- set.breaks(BA.DEG.log.center)
-
-#plot heatmaps
-make.heatmap <- function(DEG, sample.anno, gene.anno, sample.hclust, gene.hclust, breaks.samp, anno.colors){
-  pheatmap(DEG, cluster_rows = gene.hclust, cluster_cols = sample.hclust, show_colnames = FALSE, show_rownames = FALSE,
-           color = cor.color, breaks = breaks.samp, annotation_row = gene.anno,
-           annotation_col = sample.anno, annotation_colors = anno.colors,
-           annotation_names_col = FALSE, annotation_names_row = FALSE, legend_breaks = c(-4,-2,0,2,4), border_color = NA)
-}
 
 #plot
 tiff("BN_heatmap_DEG_mfuzz.tiff", units="in", width = 7, height = 8, res = 600)
@@ -675,20 +772,13 @@ BN.DEG.heatmap.mfuzz <- make.heatmap(BN.DEG.log.center.mfuzz, sample.info.BN, BN
 BN.DEG.heatmap.mfuzz
 dev.off()
 
-tiff("BA_heatmap_DEG_mfuxx.tiff", units="in", width = 7, height = 8, res = 600)
+tiff("BA_heatmap_DEG_mfuzz_4.tiff", units="in", width = 7, height = 8, res = 600)
 BA.DEG.heatmap.mfuzz <- make.heatmap(BA.DEG.log.center.mfuzz, sample.info.BA, BA.mfuzz.clusters, BA.DEG.sample.hclust, FALSE, BA.DEG.breaks, BA.mfuzz.anno.colors)
 BA.DEG.heatmap.mfuzz
 dev.off()
 
 ## Plot volcano plots ##
-## add in information on up/down regulation ##
-add.diffExpr <- function(data){
-  data$diffExpr <- "NO"
-  data$diffExpr[data$logFC >= 2 & data$FDR <= 0.01] <- "UP"
-  data$diffExpr[data$logFC <= -2 & data$FDR <= 0.01] <- "DOWN"
-  return(data)
-}
-
+#add on up/down info
 BN.StF.vs.StP.result <- add.diffExpr(BN.StF.vs.StP.result)
 BN.StP.vs.SwP.result <- add.diffExpr(BN.StP.vs.SwP.result)
 BN.SwF.vs.SwP.result <- add.diffExpr(BN.SwF.vs.SwP.result)
@@ -698,12 +788,6 @@ BA.StP.vs.SwP.result <- add.diffExpr(BA.StP.vs.SwP.result)
 BA.SwF.vs.SwP.result <- add.diffExpr(BA.SwF.vs.SwP.result)
 
 # plot
-plot.volcano <- function(data){
-  ggplot(data = data, aes(x = logFC, y = -log2(FDR), col = diffExpr)) + geom_point(alpha = 0.7) + 
-    theme_bw() + scale_color_manual(values =  c("#e76f51", "black", "#82DCDA")) + xlab("log2(FC)") + ylab("-log2(FDR)") +
-    theme(axis.title = element_text(size = 14), axis.text = element_text(size = 11), legend.position = "none")
-}
-
 tiff("BN_StF.vs.StP_volcano.tiff", units="in", width = 6, height = 6, res = 600)
 BN.StF.vs.StP.volcano <- plot.volcano(BN.StF.vs.StP.result)
 BN.StF.vs.StP.volcano
@@ -814,3 +898,66 @@ write.table(BA.k.cluster3.genes, "./data/goSeqData/BA_k_cluster3_factor.txt", co
 write.table(BN.background, "./data/goSeqData/BN_background.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 write.table(BA.background, "./data/goSeqData/BA_background.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 
+
+## Calculate variance for each group ##
+#format data frame for IQR calculation 
+t.BN.DEG <- transform(merge(t(BN.DEG), sample.info.BN, by=0), row.names = Row.names, Row.names=NULL)
+t.BA.DEG <- transform(merge(t(BA.DEG), sample.info.BA, by=0), row.names = Row.names, Row.names=NULL)
+
+t.BN.allEXPR <- transform(merge(t(allExprBN), sample.info.BN, by=0), row.names = Row.names, Row.names=NULL)
+t.BA.allEXPR <- transform(merge(t(allExprBA), sample.info.BA, by=0), row.names = Row.names, Row.names=NULL)
+
+#calculate IQR for each DEG 
+BN.IQR <- sapply(t.BN.DEG[,1:887], function(x) tapply(x, t.BN.DEG$Group, IQR))
+BA.IQR <- sapply(t.BA.DEG[,1:776], function(x) tapply(x, t.BA.DEG$Group, IQR))
+
+BN.IQR.all <- sapply(t.BN.allEXPR[,1:611157], function(x) tapply(x, t.BN.allEXPR$Group, IQR))
+BA.IQR.all <- sapply(t.BA.allEXPR[,1:546320], function(x) tapply(x, t.BA.allEXPR$Group, IQR))
+
+#edit for plotting 
+BN.IQR <- as.data.frame(BN.IQR)
+BA.IQR <- as.data.frame(BA.IQR)
+
+BN.IQR$Group <- factor(row.names(BN.IQR))
+BA.IQR$Group <- factor(row.names(BA.IQR))
+
+BN.IQR.long <- gather(BN.IQR, gene, IQR, 1:887, factor_key = TRUE)
+BA.IQR.long <- gather(BA.IQR, gene, IQR, 1:776, factor_key = TRUE)
+
+BN.IQR.long.sub <- BN.IQR.long[!(BN.IQR.long$gene == "TRINITY_DN427527_c0_g1"),]
+
+#plot boxplots 
+ggplot(BN.IQR.long.sub, aes(x=Group, y = IQR)) + geom_boxplot()
+ggplot(BA.IQR.long, aes(x=Group, y = IQR)) + geom_boxplot()
+
+#get average IQRs
+aggregate(BN.IQR.long$IQR, list(BN.IQR.long$Group), FUN=mean)
+aggregate(BA.IQR.long$IQR, list(BA.IQR.long$Group), FUN=mean)
+
+#calculate coefficient of variation 
+BN.cv <- sapply(t.BN.DEG[,1:887], function(x) tapply(x, t.BN.DEG$Group, sd(x)/mean(x)))
+
+cv <- function(x) sd(x) / mean(x) 
+
+BN.DEG.long <- gather(t.BN.DEG, gene, expr, 1:887, factor_key = TRUE)
+BA.DEG.long <- gather(t.BA.DEG, gene, expr, 1:776, factor_key = TRUE)
+
+CV.BN <- BN.DEG.long %>% group_by(Group, gene) %>%
+            summarise(cv = sd(expr)/mean(expr))
+
+CV.BA <- BA.DEG.long %>% group_by(Group, gene) %>%
+  summarise(cv = sd(expr)/mean(expr))
+
+#calculate average coefficent of variation for each species 
+mean(CV.BA$cv, na.rm = TRUE)
+mean(CV.BN$cv, na.rm = TRUE)
+
+#calculate average for populations 
+CV.BN$pop <- substr(CV.BN$Group, 1, 1)
+CV.BA$pop <- substr(CV.BA$Group, 1, 1)
+
+CV.BA %>% group_by(pop) %>% 
+  summarise(mean(cv, na.rm = TRUE))
+
+CV.BN %>% group_by(pop) %>% 
+  summarise(mean(cv, na.rm = TRUE))

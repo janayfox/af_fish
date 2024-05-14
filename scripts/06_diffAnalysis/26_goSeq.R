@@ -101,6 +101,14 @@ BA.sameDir.down.factor = read.table("./data/goSeqData/BA_same_direction_down_fac
 colnames(BA.sameDir.down.factor) = c('type')
 BA.sameDir.down.genes = rownames(BA.sameDir.down.factor)
 
+BA.snp.factor = read.table("./data/goSeqData/EA_SNPs.txt", header=F)
+colnames(BA.snp.factor) = c('type', 'gene')
+BA.snp.factor.genes = unique(BA.snp.factor$gene)
+
+BN.snp.factor = read.table("./data/goSeqData/EN_SNPs.txt", header=F)
+colnames(BN.snp.factor) = c('type', 'gene')
+BN.snp.factor.genes = unique(BN.snp.factor$gene)
+
 #read in gene lengths
 BN.gene.lengths = read.table("./data/goSeqData/BN.Trinity.gene_lengths.txt", header=T, row.names=1, com='')
 BN.gene.lengths = as.matrix(BN.gene.lengths[,1,drop=F])
@@ -112,8 +120,14 @@ BA.gene.lengths = as.matrix(BA.gene.lengths[,1,drop=F])
 BN.background = read.table("./data/goSeqData/BN_background.txt", header=F, row.names = 1)
 BN.background.gene_ids = rownames(BN.background)
 
+BN.background.snps = read.table("./data/goSeqData/EN_background_SNPs.txt", header=F)
+BN.background.snps.gene_ids = unique(BN.background.snps$V1)
+
 BA.background = read.table("./data/goSeqData/BA_background.txt", header=F, row.names = 1)
 BA.background.gene_ids = rownames(BA.background)
+
+BA.background.snps = read.table("./data/goSeqData/EA_background_SNPs.txt", header=F)
+BA.background.snps.gene_ids = unique(BA.background.snps$V1)
 
 # parse GO assignments
 BN.GO.info = read.table("./data/goSeqData/BN_go_annotations.txt", header=F, row.names=1,stringsAsFactors=F)
@@ -130,8 +144,14 @@ names(BA.GO.info.listed) = rownames(BA.GO.info)
 BN.background.gene.lengths = BN.gene.lengths[BN.background.gene_ids,]
 BA.background.gene.lengths = BA.gene.lengths[BA.background.gene_ids,]
 
+BN.background.snp.gene.lengths = BN.gene.lengths[BN.background.snps.gene_ids,]
+BA.background.snp.gene.lengths = BA.gene.lengths[BA.background.snps.gene_ids,]
+
 #get go terms for background genes only 
+BN.GO.info.listed.snp = BN.GO.info.listed[ names(BN.GO.info.listed) %in% BN.background.snps.gene_ids ]
 BN.GO.info.listed = BN.GO.info.listed[ names(BN.GO.info.listed) %in% BN.background.gene_ids ]
+
+BA.GO.info.listed.snp = BA.GO.info.listed[ names(BA.GO.info.listed) %in% BA.background.snps.gene_ids ]
 BA.GO.info.listed = BA.GO.info.listed[ names(BA.GO.info.listed) %in% BA.background.gene_ids ]
 
 ## GOseq analysis ##
@@ -148,7 +168,7 @@ BN.k.cluster2.vec = as.integer(BN.background.gene_ids %in% rownames(BN.k.cluster
 BN.30perc.cluster7.vec = as.integer(BN.background.gene_ids %in% rownames(BN.30perc.cluster7.factor))
 BN.sameDir.up.vec = as.integer(BN.background.gene_ids %in% rownames(BN.sameDir.up.factor))
 BN.sameDir.down.vec = as.integer(BN.background.gene_ids %in% rownames(BN.sameDir.down.factor))
-
+BN.snp.vec = as.integer(BN.background.snps.gene_ids %in% BN.snp.factor$gene)
 
 BA.allDEG.genes.vec = as.integer(BA.background.gene_ids %in% rownames(BA.allDEG))
 BA.StFvsSwF.up.vec = as.integer(BA.background.gene_ids %in% rownames(BA.StFvsSwF.up.factor))
@@ -161,13 +181,20 @@ BA.k.cluster3.vec = as.integer(BA.background.gene_ids %in% rownames(BA.k.cluster
 BA.30perc.cluster5.vec = as.integer(BA.background.gene_ids %in% rownames(BA.30perc.cluster5.factor))
 BA.sameDir.up.vec = as.integer(BA.background.gene_ids %in% rownames(BA.sameDir.up.factor))
 BA.sameDir.down.vec = as.integer(BA.background.gene_ids %in% rownames(BA.sameDir.down.factor))
+BA.snp.vec = as.integer(BA.background.snps.gene_ids %in% BA.snp.factor$gene)
 
 #fit the probabilty weight function (PWF) on all DE features 
 BN.pwf=nullp(BN.allDEG.genes.vec, bias.data=BN.background.gene.lengths)
 rownames(BN.pwf) = BN.background.gene_ids
 
+BN.pwf.snp=nullp(BN.snp.vec, bias.data=BN.background.snp.gene.lengths)
+rownames(BN.pwf.snp) = BN.background.snps.gene_ids
+
 BA.pwf=nullp(BA.allDEG.genes.vec, bias.data=BA.background.gene.lengths)
 rownames(BA.pwf) = BA.background.gene_ids
+
+BA.pwf.snp=nullp(BA.snp.vec, bias.data=BA.background.snp.gene.lengths)
+rownames(BA.pwf.snp) = BA.background.snps.gene_ids
 
 #perform functional enrichment testing for each category of DEGs
 BN.pwf$DEgenes = BN.StFvsSwF.up.vec
@@ -233,6 +260,13 @@ BA.sameDir.up.res = goseq(BN.pwf, gene2cat=BA.GO.info.listed)
 BA.pwf$DEgenes = BA.sameDir.down.vec
 BA.sameDir.down.res = goseq(BN.pwf, gene2cat=BA.GO.info.listed)
 
+#for snps 
+BN.pwf.snp$DEgenes = BN.snp.vec
+BN.snp.res = goseq(BN.pwf.snp, gene2cat = BN.GO.info.listed.snp)
+
+BA.pwf.snp$DEgenes = BA.snp.vec
+BA.snp.res = goseq(BA.pwf.snp, gene2cat = BA.GO.info.listed.snp)
+
 #correct p-values to q values 
 q.val.correction <- function(go.res) {
                             pvals = go.res$over_represented_pvalue
@@ -265,6 +299,9 @@ BA.30perc.cluster5.res <- q.val.correction(BA.30perc.cluster5.res)
 BA.sameDir.up.res <- q.val.correction(BA.sameDir.up.res)
 BA.sameDir.down.res <- q.val.correction(BA.sameDir.down.res)
 
+BN.snp.res$over_represented_FDR <- p.adjust(BN.snp.res$over_represented_pvalue, method = "hommel")
+BA.snp.res <- q.val.correction(BA.snp.res)
+
 #extract significant results
 BN.StFvsSwF.up.res.sig <- BN.StFvsSwF.up.res[BN.StFvsSwF.up.res$over_represented_FDR<=0.05,]
 BN.StFvsSwF.down.res.sig <- BN.StFvsSwF.down.res[BN.StFvsSwF.down.res$over_represented_FDR<=0.05,]
@@ -288,6 +325,9 @@ BA.k.cluster3.res.sig <- BA.k.cluster3.res[BA.k.cluster3.res$over_represented_FD
 BA.30perc.cluster5.res.sig <- BA.30perc.cluster5.res[BA.30perc.cluster5.res$over_represented_FDR<=0.05,]
 BA.sameDir.up.res.sig <- BA.sameDir.up.res[BA.sameDir.up.res$over_represented_FDR<=0.05,]
 BA.sameDir.down.res.sig <- BA.sameDir.down.res[BA.sameDir.down.res$over_represented_FDR<=0.05,]
+
+BN.snp.res.sig <- BN.snp.res[BN.snp.res$over_represented_FDR<=0.05,]
+BA.snp.res.sig <- BA.snp.res[BA.snp.res$over_represented_FDR<=0.05,]
 
 #remove obsolete terms
 BN.StFvsSwF.up.res.sig <- BN.StFvsSwF.up.res.sig[BN.StFvsSwF.up.res.sig$category != "GO:0044421",]

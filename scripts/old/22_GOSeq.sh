@@ -83,12 +83,12 @@ module load apptainer/1.1
 # --GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_go_annotations.txt \
 # --lengths /lustre04/scratch/janayfox/afFishRNA/trinotate/BN.Trinity.gene_lengths.txt
 
-apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
-/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
---factor_labeling /lustre04/scratch/janayfox/afFishRNA/BN_mfuzz_cluster5_factor.txt \
---background /lustre04/scratch/janayfox/afFishRNA/BN_background.txt \
---GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_go_annotations.txt \
---lengths /lustre04/scratch/janayfox/afFishRNA/trinotate/BN.Trinity.gene_lengths.txt
+# apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# /lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+# --factor_labeling /lustre04/scratch/janayfox/afFishRNA/BN_mfuzz_cluster5_factor.txt \
+# --background /lustre04/scratch/janayfox/afFishRNA/BN_background.txt \
+# --GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate/BN_go_annotations.txt \
+# --lengths /lustre04/scratch/janayfox/afFishRNA/trinotate/BN.Trinity.gene_lengths.txt
 
 # apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
 # /lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
@@ -125,19 +125,19 @@ apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lu
 # --GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
 # --lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
 
-apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
-/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
---factor_labeling /lustre04/scratch/janayfox/afFishRNA/BA_30perc_cluster5_factor.txt \
---background /lustre04/scratch/janayfox/afFishRNA/BA_background.txt \
---GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
---lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
+# apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# /lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+# --factor_labeling /lustre04/scratch/janayfox/afFishRNA/BA_30perc_cluster5_factor.txt \
+# --background /lustre04/scratch/janayfox/afFishRNA/BA_background.txt \
+# --GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
+# --lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
 
-apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
-/lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
---factor_labeling /lustre04/scratch/janayfox/afFishRNA/BA_mfuzz_cluster5_factor.txt \
---background /lustre04/scratch/janayfox/afFishRNA/BA_background.txt \
---GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
---lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
+# apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
+# /lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+# --factor_labeling /lustre04/scratch/janayfox/afFishRNA/BA_mfuzz_cluster5_factor.txt \
+# --background /lustre04/scratch/janayfox/afFishRNA/BA_background.txt \
+# --GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
+# --lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
 
 # apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lustre04/scratch/janayfox/afFishRNA \
 # /lustre04/scratch/janayfox/afFishRNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
@@ -152,3 +152,17 @@ apptainer exec -e --env-file /lustre04/scratch/janayfox/afFishRNA/envfile -B /lu
 # --background /lustre04/scratch/janayfox/afFishRNA/BA_background.txt \
 # --GO_assignments /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA_go_annotations.txt \
 # --lengths /lustre04/scratch/janayfox/afFishRNA/trinotate_BA/BA.Trinity.gene_lengths.txt
+
+apptainer exec -e --env-file /lustre04/scratch/janayfox/af_fish_RNA/envfile -B /lustre04/scratch/janayfox/af_fish_RNA \
+/lustre04/scratch/janayfox/af_fish_RNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+--factor_labeling /lustre04/scratch/janayfox/af_fish_RNA/EA_SNPs.txt \
+--background /lustre04/scratch/janayfox/af_fish_RNA/goSeq/BA_background.txt \
+--GO_assignments /lustre04/scratch/janayfox/af_fish_RNA/trinotate/trinotate_BA/BA_go_annotations.txt \
+--lengths /lustre04/scratch/janayfox/af_fish_RNA/trinotate/trinotate_BA/BA.Trinity.gene_lengths.txt
+
+apptainer exec -e --env-file /lustre04/scratch/janayfox/af_fish_RNA/envfile -B /lustre04/scratch/janayfox/af_fish_RNA \
+/lustre04/scratch/janayfox/af_fish_RNA/trinityrnaseq.v2.15.1.simg /usr/local/bin/Analysis/DifferentialExpression/run_GOseq.pl \
+--factor_labeling /lustre04/scratch/janayfox/af_fish_RNA/EN_SNPs.txt \
+--background /lustre04/scratch/janayfox/af_fish_RNA/goSeq/BN_background.txt \
+--GO_assignments /lustre04/scratch/janayfox/af_fish_RNA/trinotate/trinotate_BN/BN_go_annotations.txt \
+--lengths /lustre04/scratch/janayfox/af_fish_RNA/trinotate/trinotate_BN/BN.Trinity.gene_lengths.txt

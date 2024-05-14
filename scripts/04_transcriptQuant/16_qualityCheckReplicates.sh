@@ -14,8 +14,6 @@
 #have to run this way to have access to R packages 
 module load singularity/3.8
 
-### going to have to potentially edit sample files here? and make new ones for the uncleaned
-
 #compare replicates 
 singularity exec -e --env-file envfile -B /lustre04/scratch/janayfox/afFishRNA \
 trinityrnaseq.v2.15.0.simg /usr/local/bin/Analysis/DifferentialExpression/PtR  \
