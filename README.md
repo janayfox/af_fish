@@ -1,2 +1,2 @@
 # af_fish
-Data analysis for chapter 4 of thesis analyzing shifts in gene expression in two species of fish that live in low- or high-DO environments.
+Data analysis for chapter 4 of thesis analyzing shifts in gene expression in two species of fish that live in low- or high-DO environments. Scripts should be run in order of numbering. Start with folder 1 of scripts and go through the scripts in order and so on. Folder with old scripts is for scripts that did not generate outputs used in the paper. 
