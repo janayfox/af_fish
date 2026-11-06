@@ -209,10 +209,18 @@ data/
 ├── pondData/                 pond_data_BA.csv, pond_data_BN.csv — holding-pond assignment per
 │                             individual (Field / Pond1 / Pond2), read by 21_statAnalysis.R
 └── raw/
-    ├── collections.xlsx      master field record: ID, species, site, total and standard length,
-    │                         pond, sample type, and whether the fish was sequenced
-    └── pond_data.xlsx        source spreadsheet for the pondData CSVs
+    ├── collections.xlsx      master field record for all 76 fish: ID, species, site, total and
+    │                         standard length, pond, sample type, whether the fish was sequenced
+    ├── pond_data.xlsx        source spreadsheet for the pondData CSVs
+    └── PondTempDOData.ods    daily holding-pond temperature and dissolved oxygen readings,
+                              14 dates from 2017-06-06 — the source data for Table S1
 ```
+
+> **On the pond readings.** `PondTempDOData.ods` logs four ponds, but only ponds 1 and 2 held fish
+> used in this study — pond 1 held 20 individuals and pond 2 held 16 (36 acclimated fish in total,
+> of which 33 were sequenced). Ponds 3 and 4 were monitored alongside them but contributed no
+> individuals here, which is why Methods §2.3 describes two ponds. The per-individual pond
+> assignment used in the analysis is `data/pondData/pond_data_*.csv`.
 
 Everything else the R scripts read is **not** here — those are outputs of steps 01–19 and 27–30,
 and the gene-level results tables are published as supplementary material with the paper. The
