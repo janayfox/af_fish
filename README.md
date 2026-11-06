@@ -229,6 +229,23 @@ data/
 Figures and tables are written to the working directory (repository root), not to an output
 folder.
 
+### Sample-to-group definitions
+
+Scripts `12`, `15`, `16`, `17` and `28` take a Trinity samples file — `samples_BA_sal_bf.txt` and
+`samples_BN_sal_bf.txt` — which assigns each individual to one of the four groups and is therefore
+what defines the experimental design for edgeR. These files lived at the project root on the
+compute cluster and are **not** included here. Each is tab-delimited, one line per individual:
+
+```
+<group>	<individual>	<left.fq>	<right.fq>
+```
+
+where `<group>` is `stream_field`, `stream_pond`, `swamp_field` or `swamp_pond`. The group
+assignment for each individual can be recovered from the sample metadata attached to the SRA
+BioSamples under [PRJNA1041828](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1041828);
+`scripts/07_snpAnalysis/BA_files.txt` and `BN_files.txt` list the individual IDs per species.
+The same assignment underlies `data/snp/pop_EA.txt` and `pop_EN.txt`.
+
 ---
 
 ## Software
