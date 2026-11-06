@@ -200,9 +200,23 @@ rather than CRAN; uncomment it if you want to run those sections.
 
 ## Data layout for the R scripts
 
-The intermediate files the R scripts read are **not** in this repository — they are outputs of
-steps 01–19 and 27–30, and the gene-level results tables are published as supplementary material
-with the paper. The R scripts expect this tree under the repository root:
+The small metadata files that define the experimental design **are** included under `data/`:
+
+```
+data/
+├── samples_BA_sal_bf.txt     group assignment per individual, read by scripts 12, 15, 16, 17, 28
+├── samples_BN_sal_bf.txt
+├── pondData/                 pond_data_BA.csv, pond_data_BN.csv — holding-pond assignment per
+│                             individual (Field / Pond1 / Pond2), read by 21_statAnalysis.R
+└── raw/
+    ├── collections.xlsx      master field record: ID, species, site, total and standard length,
+    │                         pond, sample type, and whether the fish was sequenced
+    └── pond_data.xlsx        source spreadsheet for the pondData CSVs
+```
+
+Everything else the R scripts read is **not** here — those are outputs of steps 01–19 and 27–30,
+and the gene-level results tables are published as supplementary material with the paper. The
+scripts expect them in this tree under the repository root:
 
 ```
 data/
@@ -217,9 +231,8 @@ data/
 ├── trinotate/         BN_uniprot_sprot.diamond.blastx.outfmt6 (and BA_), Trinotate reports
 ├── goSeqData/         <species>.Trinity.gene_lengths.txt, per-cluster and per-contrast
 │                      up/down gene factor lists
-├── pondData/          pond_data_BN.csv, pond_data_BA.csv — holding-pond assignment per
-│                      individual, for the pond-effect check
-└── snp/               pop_EA.txt, pop_EN.txt (individual → population),
+└── snp/               pop_EA.txt, pop_EN.txt (individual → population; derivable from
+                       data/raw/collections.xlsx),
                        BA.freebayes.results.filtered.hwe.ld.norm.edited.vcf (and BN)
 ```
 
@@ -231,20 +244,27 @@ folder.
 
 ### Sample-to-group definitions
 
-Scripts `12`, `15`, `16`, `17` and `28` take a Trinity samples file — `samples_BA_sal_bf.txt` and
-`samples_BN_sal_bf.txt` — which assigns each individual to one of the four groups and is therefore
-what defines the experimental design for edgeR. These files lived at the project root on the
-compute cluster and are **not** included here. Each is tab-delimited, one line per individual:
+Scripts `12`, `15`, `16`, `17` and `28` take a Trinity samples file — `data/samples_BA_sal_bf.txt`
+and `data/samples_BN_sal_bf.txt` — which assigns each individual to one of the four groups and is
+therefore what defines the experimental design for edgeR. Each is tab-delimited, one line per
+individual:
 
 ```
-<group>	<individual>	<left.fq>	<right.fq>
+<group>	<group>_rep<n>_sal	<left.fq>	<right.fq>
 ```
 
-where `<group>` is `stream_field`, `stream_pond`, `swamp_field` or `swamp_pond`. The group
-assignment for each individual can be recovered from the sample metadata attached to the SRA
-BioSamples under [PRJNA1041828](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1041828);
-`scripts/07_snpAnalysis/BA_files.txt` and `BN_files.txt` list the individual IDs per species.
-The same assignment underlies `data/snp/pop_EA.txt` and `pop_EN.txt`.
+where `<group>` is `stream_field`, `stream_pond`, `swamp_field` or `swamp_pond`. The read paths are
+the cluster's container-internal `/data/...` paths and will need editing for your own system.
+
+> **One exclusion.** `samples_BN_sal_bf.txt` lists 33 individuals, but the published
+> *E. neumayeri* analysis used 32. Fish **0616g** (`swamp_field_BN_rep7_sal`) was dropped for poor
+> sample quality after this file was written — this is the removed low-DO immediate sample noted in
+> Methods §2.5. It is absent from `data/pondData/pond_data_BN.csv`, which has the final 32. Exclude
+> it to reproduce the paper's group sizes (Table 1). `samples_BA_sal_bf.txt` needs no such
+> adjustment: all 37 *E. apleurogramma* individuals were retained.
+
+The same group assignment underlies `data/snp/pop_EA.txt` and `pop_EN.txt`, and the whole design can
+be rebuilt from `data/raw/collections.xlsx` if needed.
 
 ---
 
