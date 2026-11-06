@@ -14,7 +14,7 @@
 module load singularity/3.8
 module load gcc/9.3.0
 module load StdEnv/2020
-moduel load openmpi/4.0.3
+module load openmpi/4.0.3
 module load salmon/1.4.0
 
 # #prepare reference for alignment 

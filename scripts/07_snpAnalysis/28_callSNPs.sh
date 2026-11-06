@@ -7,7 +7,7 @@
 #SBATCH --mail-user=janay.fox@mail.mcgill.ca
 
 #######################################################
-### Goal: Construct SuperTranscripts
+### Goal: Call SNPs against the SuperTranscript reference
 ### Author: Janay Fox
 #######################################################
 
@@ -40,4 +40,4 @@ trinityrnaseq.v2.15.1.simg /lustre04/scratch/janayfox/af_fish_RNA/trinityrnaseq-
 -samples_file /lustre04/scratch/janayfox/af_fish_RNA/sample_lists/samples_BN_sal_bf.txt \
 -o /lustre04/scratch/janayfox/af_fish_RNA/variant_calling/BN
 
-#while read -r value1 value2 value3; do sbatch 27_callSNPs.sh $value1 $value2 $value3; done < BA_files.txt
+#while read -r value1 value2 value3; do sbatch 28_callSNPs.sh $value1 $value2 $value3; done < BA_files.txt

@@ -1,11 +1,11 @@
 ######################################################################
-### Goal: Extract results from Trinotate
+### Goal: Population genetics - Fst, pcadapt outlier scan, and GO enrichment
 ### Author: Janay Fox
 ### R script
 #####################################################################
 
 ## Set up ##
-library(OutFLANK)
+#library(OutFLANK) #only needed for the commented-out OutFLANK analysis below
 library(vcfR)
 library(hierfstat)
 library(pcadapt)
